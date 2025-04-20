@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../common/loaclPlanStoreService.dart';
-import '../../modals/workoutPlan.dart';
-import '../../utils/utils.dart';
+import '../../../common/services/loaclPlanStoreService.dart';
+import '../../../modals/workoutPlan.dart';
+import '../../../utils/utils.dart';
 
 final workoutPlanProvider = FutureProvider<WorkoutPlan?>((ref) async {
   final plan = await HiveService.getWorkoutPlan('myPlan');

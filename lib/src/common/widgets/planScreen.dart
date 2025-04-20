@@ -4,10 +4,9 @@ import 'package:healthvaults/src/features/goal/views/widgets/monthlyWorkOut.dart
 import 'package:healthvaults/src/features/goal/views/widgets/rowIconText.dart';
 import 'package:healthvaults/src/res/appImages.dart';
 
-import '../../../modals/workoutModel2.dart';
-import '../../../modals/workoutPlan.dart';
-import '../../../res/const.dart';
-import '../controller/workoutPlanController.dart';
+import '../../modals/workoutPlan.dart';
+import '../../res/const.dart';
+import '../../features/goal/controller/workoutPlanController.dart';
 
 class planScreen extends ConsumerWidget {
   final WorkoutPlan workoutPlan;

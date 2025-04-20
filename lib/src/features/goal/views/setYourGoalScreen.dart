@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthvaults/src/features/goal/views/planScreen2.dart';
+import 'package:healthvaults/src/common/widgets/planScreen.dart';
 import 'package:healthvaults/src/features/goal/views/widgets/difficulty_Buttton.dart';
 import 'package:healthvaults/src/res/appColors.dart';
 import 'package:healthvaults/src/res/appImages.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../common/loaclPlanStoreService.dart';
+import '../../../common/services/loaclPlanStoreService.dart';
 import '../../../res/const.dart';
 import '../controller/workoutPlanController.dart';
 

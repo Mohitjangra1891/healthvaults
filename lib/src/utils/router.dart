@@ -4,13 +4,13 @@ import 'package:healthvaults/src/features/auth/views/loginScreen.dart';
 import 'package:healthvaults/src/features/auth/views/otpVerifyScreen.dart';
 import 'package:healthvaults/src/homePage.dart';
 
+import '../features/auth/views/onboardingScreen.dart';
 import '../features/goal/views/myGoalScreen.dart';
 import '../features/goal/views/setYourGoalScreen.dart';
-import '../features/healthTab/exerciseDetailScreen.dart';
-import '../features/home/addNewProfileScreen.dart';
-import '../features/home/uploadDocument.dart';
-import '../features/myProfile/myProfileScreen.dart';
-import '../features/onboarding/views/onboardingScreen.dart';
+
+import '../features/healthTab/views/myProfile/myProfileScreen.dart';
+import '../features/recordsTab/addNewProfileScreen.dart';
+import '../features/recordsTab/uploadDocument.dart';
 import '../modals/record.dart';
 
 class routeNames {

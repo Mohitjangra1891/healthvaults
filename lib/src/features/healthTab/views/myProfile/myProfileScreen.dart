@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../utils/themes/themeProvider.dart';
-import '../../res/appColors.dart';
+import '../../../../res/appColors.dart';
+import '../../../../utils/themes/themeProvider.dart';
 
 class MyProfilePage extends ConsumerWidget {
   @override

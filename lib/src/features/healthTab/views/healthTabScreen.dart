@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:healthvaults/src/features/drawer/drawerScreen.dart';
-import 'package:healthvaults/src/features/healthTab/todayExcerciseScreen.dart';
+import 'package:healthvaults/src/features/healthTab/views/todayExcerciseScreen.dart';
+import 'package:healthvaults/src/features/healthTab/views/widgets/noPlanScreen.dart';
 import 'package:healthvaults/src/utils/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import '../../modals/workoutPlan.dart';
-import '../../res/appColors.dart';
+import '../../../modals/workoutPlan.dart';
+import '../../../res/appColors.dart';
+import '../../../res/appImages.dart';
 
 class healthTabScreen extends StatefulWidget {
   const healthTabScreen({super.key});
@@ -94,7 +95,7 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
                     ? WorkoutTodayScreen(
                         workoutPlan: savedPlan,
                       )
-                    : noGoalScreen(),
+                    : noPlanScreen(),
               );
             }),
 
@@ -120,72 +121,76 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
   }
 }
 
-class noGoalScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final borderColor = isDark ? Colors.white : AppColors.primaryColor;
-    return Column(
+Drawer buildDrawer(BuildContext context) {
+  return Drawer(
+    child: ListView(
+      padding: EdgeInsets.zero,
       children: [
-        // Top Welcome Container
         Container(
-          width: double.infinity,
-          height: screenHeight * 0.16,
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade600,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Text(
-                'Welcome to HealthVaults',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+          padding: const EdgeInsets.all(16),
+          margin: const EdgeInsets.only(top: 48,),
+          child: Row(
+            children: [
+              Hero(
+                tag: 'logo',
+                child: Image.asset(
+                  appImages.appLogo,
+                  height: 64,
+                  width: 64,
                 ),
               ),
-              SizedBox(height: 8),
-              Text(
-                "Let's start your health journey today!",
+              const SizedBox(
+                width: 8,
+              ),
+              const Text(
+                'HealthVault',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
         ),
-        SizedBox(height: screenHeight * 0.30),
-
-        Text(
-          "Ready to set Your First Health Goal.",
-          textAlign: TextAlign.center,
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 22),
+        Divider(
+          color: Colors.grey.withOpacity(0.4),
+          indent: 16,
+          endIndent: 16,
         ),
-        SizedBox(height: 12),
-
-        OutlinedButton(
-          onPressed: () {
-            context.pushNamed(routeNames.SetYourGoalScreen);
+        // themes
+        ListTile(
+          leading: const Icon(Icons.account_circle_outlined),
+          title: const Text('My Profile'),
+          onTap: () {
+            context.pushNamed(routeNames.profile);
+            // Navigator.of(context).pushNamed(AppRouter.themesRoute);
           },
-          style: OutlinedButton.styleFrom(
-            minimumSize: Size(screenWidth, screenHeight * 0.05),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            side: BorderSide(color: borderColor, width: 1.8),
-            // minimumSize: Size(double.infinity, 50),
-          ),
-          child: Text("Set My First Goal", style: TextStyle(color: borderColor, fontWeight: FontWeight.w500, fontSize: 20)),
+        ),
+        // settings
+        ListTile(
+          leading: const Icon(Icons.analytics_outlined),
+          title: const Text('My Progression'),
+          onTap: () {
+            // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
+          },
+        ),  ListTile(
+          leading: const Icon(Icons.calendar_today_outlined),
+          title: const Text('My Goals'),
+          onTap: () {
+            context.pushNamed(routeNames.Mygoalscreen);
+            // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
+          },
+        ), ListTile(
+          leading: const Icon(Icons.privacy_tip_outlined),
+          title: const Text('Change Goal'),
+          onTap: () {
+            context.pushNamed(routeNames.SetYourGoalScreen);
+
+
+            // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
+          },
         ),
       ],
-    );
-  }
+    ),
+  );
 }

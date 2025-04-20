@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:healthvaults/src/features/goal/views/planScreen2.dart';
+import 'package:healthvaults/src/common/widgets/planScreen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../modals/workoutPlan.dart';

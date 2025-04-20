@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import '../features/healthTab/exerciseDetailScreen.dart';
+import '../../features/healthTab/controller/youTubeController.dart';
+import '../../features/healthTab/views/demoExercise/exerciseDetailScreen.dart';
 
 class YouTubeService {
   final String apiKey;

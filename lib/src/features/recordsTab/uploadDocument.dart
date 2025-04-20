@@ -7,8 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:healthvaults/src/common/widgets/button.dart';
 import 'package:healthvaults/src/modals/record.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 
+import '../../common/widgets/datePicker.dart';
+import '../../common/widgets/textfield.dart';
 import '../../res/appColors.dart';
 import 'controller/recordController.dart';
 
@@ -48,11 +49,11 @@ class _uploadDocumentScreenState extends State<uploadDocumentScreen> {
             const SizedBox(height: 16),
 
             // First Name
-            _buildTextField(context, label: 'Doctor name', hint: 'Enter Doctor Name', controller: _first_controller),
+            buildTextField(context, label: 'Doctor name', hint: 'Enter Doctor Name', controller: _first_controller),
             const SizedBox(height: 16),
 
             // Last Name
-            _buildTextField(context, label: 'Description', hint: 'Enter Description', controller: _second_controller),
+            buildTextField(context, label: 'Description', hint: 'Enter Description', controller: _second_controller),
             const SizedBox(height: 16),
 
             CustomDatePicker(
@@ -77,8 +78,8 @@ class _uploadDocumentScreenState extends State<uploadDocumentScreen> {
                     onPressed: () {
                       if (_first_controller.text.isNotEmpty && _second_controller.text.isNotEmpty) {
                         ref.read(RecordProvider.notifier).addRecord(
-                          RecordModel(name: "New Patient", createdAt: selectedDate!, type: widget.recordType),
-                        );
+                              RecordModel(name: "New Patient", createdAt: selectedDate!, type: widget.recordType),
+                            );
 
                         context.pop(); // for go_router
                       } else {
@@ -93,40 +94,6 @@ class _uploadDocumentScreenState extends State<uploadDocumentScreen> {
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField(
-    BuildContext context, {
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    bool readOnly = false,
-    Widget? suffixIcon,
-    VoidCallback? onTap,
-  }) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: Theme.of(context).textTheme.labelMedium),
-        const SizedBox(height: 6),
-        TextField(
-          controller: controller,
-          readOnly: readOnly,
-          onTap: onTap,
-          style: Theme.of(context).textTheme.bodyMedium,
-          decoration: InputDecoration(
-            hintText: hint,
-            suffixIcon: suffixIcon,
-            border: const OutlineInputBorder(),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: colorScheme.primary),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
@@ -187,60 +154,6 @@ class _CustomDropdownBoxState extends State<CustomDropdownBox> {
             ),
             child: Text(
               selectedValue ?? 'Select Profile',
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-
-class CustomDatePicker extends StatefulWidget {
-  final Function(DateTime) onDateSelected;
-
-  const CustomDatePicker({super.key, required this.onDateSelected});
-
-  @override
-  _CustomDatePickerState createState() => _CustomDatePickerState();
-}
-
-class _CustomDatePickerState extends State<CustomDatePicker> {
-  DateTime? selectedDate;
-
-  void _pickDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        selectedDate = picked;
-      });
-      widget.onDateSelected(picked);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final formattedDate = selectedDate != null ? DateFormat('yyyy-MM-dd').format(selectedDate!) : 'Select Date';
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Issue Date", style: Theme.of(context).textTheme.labelMedium),
-        const SizedBox(height: 6),
-        InkWell(
-          onTap: _pickDate,
-          child: InputDecorator(
-            decoration: InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            ),
-            child: Text(
-              formattedDate,
             ),
           ),
         ),

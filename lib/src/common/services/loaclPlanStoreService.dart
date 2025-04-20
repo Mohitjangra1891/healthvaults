@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../modals/workoutPlan.dart';
+import '../../modals/workoutPlan.dart';
 
 class HiveService {
   static const _workoutBoxName = 'workoutPlans';

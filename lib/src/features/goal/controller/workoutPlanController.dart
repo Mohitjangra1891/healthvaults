@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
-import '../../../modals/workoutModel2.dart';
 import '../../../modals/workoutPlan.dart';
 import '../../../res/const.dart';
 
