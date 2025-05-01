@@ -11,6 +11,11 @@
 
 <key>NSPhotoLibraryUsageDescription</key>
 <string>This app needs access to your photo library.</string>
+<key>NSPhotoLibraryUsageDescription</key>
+<string>We need access to your files to upload PDFs</string>
+<key>NSDocumentsFolderUsageDescription</key>
+<string>This app needs access to pick and upload PDF documents.</string>
+
 
 
 	<key>CFBundleDevelopmentRegion</key>

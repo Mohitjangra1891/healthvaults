@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthvaults/src/app.dart';
+import 'package:healthvaults/src/modals/TaskEntity.dart';
 import 'package:healthvaults/src/modals/workoutPlan.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -13,13 +15,20 @@ const apiKey = 'AIzaSyD9qInR8qPrJf77MSovq2op_e4XeNzzYnY'; // Replace with your a
 Future<void> main() async {
 try{
   WidgetsFlutterBinding.ensureInitialized();
-  final appDocDir = await getApplicationDocumentsDirectory();
-  // Hive.init(appDocDir.path);
-  // Initialize Hive and set the directory
-  await Hive.initFlutter(appDocDir.path);
+  if(kIsWeb){
+    await Hive.initFlutter();
+
+  }
+  else{
+    final appDocDir = await getApplicationDocumentsDirectory();
+    // Hive.init(appDocDir.path);
+    await Hive.initFlutter(appDocDir.path);
+
+  }
 
   Hive.registerAdapter(WorkoutPlanAdapter());
   Hive.registerAdapter(WorkoutMonthAdapter());
+  Hive.registerAdapter(TaskEntityAdapter());
 
   // Open a box for storing WorkoutPlan objects
   await Hive.openBox<WorkoutPlan>('workoutPlans');

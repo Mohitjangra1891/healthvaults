@@ -3,18 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-import 'package:healthvaults/src/common/widgets/button.dart';
-import 'package:healthvaults/src/modals/record.dart';
-import 'package:image_picker/image_picker.dart';
+
 import 'package:intl/intl.dart';
 
-import '../../res/appColors.dart';
 class CustomDatePicker extends StatefulWidget {
   final Function(DateTime) onDateSelected;
+  final String title;
 
-  const CustomDatePicker({super.key, required this.onDateSelected});
+  const CustomDatePicker({super.key, required this.onDateSelected ,required this.title});
 
   @override
   _CustomDatePickerState createState() => _CustomDatePickerState();
@@ -45,7 +41,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Issue Date", style: Theme.of(context).textTheme.labelMedium),
+        Text(widget.title, style: Theme.of(context).textTheme.labelMedium),
         const SizedBox(height: 6),
         InkWell(
           onTap: _pickDate,

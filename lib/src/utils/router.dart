@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:healthvaults/src/common/views/SplashScreen.dart';
+import 'package:healthvaults/src/features/auth/views/addUserDetailsScreen.dart';
 import 'package:healthvaults/src/features/auth/views/loginScreen.dart';
 import 'package:healthvaults/src/features/auth/views/otpVerifyScreen.dart';
 import 'package:healthvaults/src/homePage.dart';
@@ -9,14 +11,17 @@ import '../features/goal/views/myGoalScreen.dart';
 import '../features/goal/views/setYourGoalScreen.dart';
 
 import '../features/healthTab/views/myProfile/myProfileScreen.dart';
-import '../features/recordsTab/addNewProfileScreen.dart';
-import '../features/recordsTab/uploadDocument.dart';
+
+import '../features/recordsTab/profiles/views/addNewProfileScreen.dart';
+import '../features/recordsTab/records/views/uploadDocument.dart';
 import '../modals/record.dart';
 
 class routeNames {
   static String splash = '/splash';
+  static String onboarding = '/onboarding';
   static String home = '/home';
   static String login = '/login';
+  static String addDetails = '/addDetails';
   static String otpVerify = '/otpVerify';
   static String profile = '/profile';
   static String createProfile = '/createProfile';
@@ -27,11 +32,17 @@ class routeNames {
 }
 
 final GoRouter router = GoRouter(
-  initialLocation: routeNames.home,
+  initialLocation: routeNames.splash,
   routes: [
     GoRoute(
       name: routeNames.splash,
       path: routeNames.splash,
+      builder: (BuildContext context, GoRouterState state) {
+        return Splashscreen();
+      },
+    ),  GoRoute(
+      name: routeNames.onboarding,
+      path: routeNames.onboarding,
       builder: (BuildContext context, GoRouterState state) {
         return OnboardingScreen();
       },
@@ -41,6 +52,14 @@ final GoRouter router = GoRouter(
       path: routeNames.login,
       builder: (BuildContext context, GoRouterState state) {
         return LoginScreen();
+      },
+    ), GoRoute(
+      name: routeNames.addDetails,
+      path: "${routeNames.addDetails}/:number",
+      builder: (BuildContext context, GoRouterState state) {
+        final number = state.pathParameters['number']!;
+
+        return addUserDetailsScreen( number);
       },
     ),
     GoRoute(

@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthvaults/src/features/recordsTab/widgets/docsListView.dart';
-import 'package:healthvaults/src/features/recordsTab/widgets/profileListView.dart';
+import 'package:healthvaults/src/features/recordsTab/profiles/views/profileListView.dart';
+import 'package:healthvaults/src/features/recordsTab/records/views/docsListView.dart';
 
-import 'controller/recordController.dart';
+import '../../common/views/widgets/dailogs.dart';
+import 'records/controller/recordController.dart';
 
 class RecordsTabScreen extends ConsumerStatefulWidget {
   const RecordsTabScreen({super.key});
@@ -13,7 +13,7 @@ class RecordsTabScreen extends ConsumerStatefulWidget {
   ConsumerState<RecordsTabScreen> createState() => _healthTabScreenState();
 }
 
-class _healthTabScreenState extends  ConsumerState<RecordsTabScreen> with AutomaticKeepAliveClientMixin {
+class _healthTabScreenState extends ConsumerState<RecordsTabScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // 🛡️ This keeps your tab alive
 
@@ -21,101 +21,14 @@ class _healthTabScreenState extends  ConsumerState<RecordsTabScreen> with Automa
   Widget build(BuildContext context) {
     super.build(context); // IMPORTANT for keep alive!
 
-    final selectedIndexes = ref.watch(selectedRecordIndexesProvider);
-    final isSelectionMode = ref.watch(selectionModeProvider);
+    debugPrint('🔄 Widget rebuilt: ${context.widget.runtimeType}');
 
     return SafeArea(
       child: Scaffold(
-        appBar: isSelectionMode
-            ? PreferredSize(
-                preferredSize: Size.fromHeight(70),
-                child: Builder(
-                  builder: (context) => Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      BackButton(
-                        onPressed: () {
-                          ref.read(selectionModeProvider.notifier).state = false;
-
-                          ref.read(selectedRecordIndexesProvider.notifier).clear();
-                        },
-                      ),
-                      Text(
-                        'Selected${selectedIndexes.length} items',
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      Spacer(),
-                      IconButton(
-                          icon: Icon(Icons.delete),
-                          onPressed: () async {
-                            final confirm = await showDialog<bool>(
-                              context: context,
-                              builder: (ctx) => AlertDialog(
-                                title: Text('Delete Selected Records'),
-                                content: Text('Are you sure you want to delete the selected records?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.of(ctx).pop(false),
-                                    child: Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () => Navigator.of(ctx).pop(true),
-                                    child: Text('Delete', style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              ),
-                            );
-                            if (confirm == true) {
-                              final selectedIndexes = ref.read(selectedRecordIndexesProvider);
-                              final allRecords = ref.read(RecordProvider);
-                              final selectedRecords = selectedIndexes.map((i) => allRecords[i]).toList();
-
-                              for (final record in selectedRecords) {
-                                ref.read(RecordProvider.notifier).deleteRecord(record);
-                              }
-
-                              ref.read(selectedRecordIndexesProvider.notifier).clear();
-                              ref.read(selectionModeProvider.notifier).state = false;
-                            }
-                          }),
-                      IconButton(icon: Icon(Icons.share), onPressed: () {}),
-                    ],
-                  ),
-                ),
-              )
-            : PreferredSize(
-                preferredSize: Size.fromHeight(70),
-                child: Builder(
-                  builder: (context) => Padding(
-                    padding: const EdgeInsets.only(left: 18.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'My Records',
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        Spacer(),
-                        PopupMenuButton<String>(
-                          position: PopupMenuPosition.under,
-                          onSelected: (value) {
-                            if (value == 'select') {
-                              // ref.read(selectedRecordIndexesProvider.notifier).toggle();
-                              ref.read(selectionModeProvider.notifier).state = true;
-                            }
-                          },
-                          itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                            const PopupMenuItem<String>(
-                              value: 'select',
-                              child: Text('Select Items'),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: const _AppBar(),
+        ),
         body: Padding(
           padding: EdgeInsets.only(left: 18, right: 18, top: 18),
           child: Column(
@@ -123,26 +36,9 @@ class _healthTabScreenState extends  ConsumerState<RecordsTabScreen> with Automa
             children: [
               // _topSection(context),
               profileListView(),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12.0),
-                child: TextField(
-                  style: TextStyle(color: Colors.white),
-                  decoration: InputDecoration(
-                    hintText: "Search",
-                    hintStyle: TextStyle(fontSize: 12),
-                    prefixIcon: Icon(
-                      CupertinoIcons.search,
-                    ),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
-                  ),
-                ),
-              ),
-              // "Today"
-              Text(
-                "Today",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              docsListWidget()
+
+              // docsListWidget()
+              RecordListScreen()
             ],
           ),
         ),
@@ -150,12 +46,75 @@ class _healthTabScreenState extends  ConsumerState<RecordsTabScreen> with Automa
     );
   }
 
-  // Widget _topSection(BuildContext context) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //
-  //     ],
-  //   );
-  // }
+}
+
+Widget buildSelectionAppBar(BuildContext context, WidgetRef ref, Set<String> selectedIndexes) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      BackButton(
+        onPressed: () {
+          ref.read(selectionModeProvider.notifier).state = false;
+          ref.read(selectedRecordIdsProvider.notifier).clear();
+        },
+      ),
+      Text('Selected ${selectedIndexes.length} items', style: TextStyle(fontSize: 22)),
+      Spacer(),
+      IconButton(
+        icon: Icon(Icons.delete),
+        onPressed: () async {
+          showDeleteConfirmationDialog(
+            context: context,
+            onConfirm: () async {
+              await ref.read(recordListProvider.notifier).deleteRecords(selectedIndexes.toList());
+              ref.read(selectedRecordIdsProvider.notifier).clear();
+              ref.read(selectionModeProvider.notifier).state = false;
+            },
+          );
+        },
+      ),
+      IconButton(icon: Icon(Icons.share), onPressed: () {}),
+    ],
+  );
+}
+
+class _AppBar extends ConsumerWidget {
+  const _AppBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    debugPrint('🔄 _AppBar rebuilt: ${context.widget.runtimeType}');
+
+    final selectedIndexes = ref.watch(selectedRecordIdsProvider);
+    final isSelectionMode = ref.watch(selectionModeProvider);
+
+    return isSelectionMode ? buildSelectionAppBar(context, ref, selectedIndexes) : _buildNormalAppBar(context, ref);
+  }
+
+  Widget _buildNormalAppBar(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('My Records', style: TextStyle(fontSize: 22)),
+          const Spacer(),
+          PopupMenuButton<String>(
+            position: PopupMenuPosition.under,
+            onSelected: (value) {
+              if (value == 'select') {
+                ref.read(selectionModeProvider.notifier).state = true;
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem<String>(
+                value: 'select',
+                child: Text('Select Items'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -43,7 +43,7 @@ class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan?>> {
   }
 }
 
-final planProvider = StateNotifierProvider<PlanNotifier, AsyncValue<WorkoutPlan?>>(
+final CreatePlan_Provider_Controller = StateNotifierProvider<PlanNotifier, AsyncValue<WorkoutPlan?>>(
   (ref) => PlanNotifier(),
 );
 

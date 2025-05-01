@@ -13,7 +13,7 @@ final ThemeData lightTheme = ThemeData(
 );
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: Colors.black,
+  scaffoldBackgroundColor: Colors.white10,
   primaryColor: Colors.grey[900],
   hintColor: Colors.blueAccent,
   // Define additional dark theme properties here

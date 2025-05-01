@@ -8,6 +8,14 @@ import '../../../../res/appColors.dart';
 import '../../../../utils/router.dart';
 
 class ProgressCard extends StatelessWidget {
+  final int totalTask;
+  final int completed;
+
+  const ProgressCard({
+    super.key,
+    required this.totalTask,
+    required this.completed,
+  });
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
@@ -36,7 +44,7 @@ class ProgressCard extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                "0/6 exercises completed",
+                "$completed/$totalTask exercises completed",
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.white70,
@@ -52,14 +60,14 @@ class ProgressCard extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 CircularProgressIndicator(
-                  value: 0.6,
+                  value: completed/totalTask,
                   strokeWidth: 8.0,
                   backgroundColor: Colors.white30,
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
                 Center(
                   child: Text(
-                    '${(0.0 * 100).toInt()}%',
+                    '${(completed/totalTask * 100).toInt()}%',
                     style: theme.textTheme.headlineSmall?.copyWith(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

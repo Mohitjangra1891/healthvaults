@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:healthvaults/src/common/widgets/planScreen.dart';
+import 'package:healthvaults/src/common/services/authSharedPrefHelper.dart';
+import 'package:healthvaults/src/common/views/planScreen.dart';
+import 'package:healthvaults/src/features/goal/repo/taskRepo.dart';
 import 'package:healthvaults/src/features/goal/views/widgets/difficulty_Buttton.dart';
 import 'package:healthvaults/src/res/appColors.dart';
 import 'package:healthvaults/src/res/appImages.dart';
@@ -8,7 +10,8 @@ import 'package:lottie/lottie.dart';
 
 import '../../../common/services/loaclPlanStoreService.dart';
 import '../../../res/const.dart';
-import '../controller/workoutPlanController.dart';
+import '../../healthTab/controller/todayExcerciseController.dart';
+import '../controller/CreatePlanController.dart';
 
 class SetYourGoalScreen extends ConsumerStatefulWidget {
   @override
@@ -45,7 +48,7 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
       curve: Curves.easeInOut,
     );
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(planProvider.notifier).initChatSession();
+      ref.read(CreatePlan_Provider_Controller.notifier).initChatSession();
     });
   }
 
@@ -112,7 +115,7 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
         goals: goalText);
 
     print("prompt =$prompt");
-    await ref.read(planProvider.notifier).fetchPlan(prompt: prompt);
+    await ref.read(CreatePlan_Provider_Controller.notifier).fetchPlan(prompt: prompt);
     setState(() {
       // hasGeneratedPlan = true;
       showPlan = true;
@@ -338,7 +341,7 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
               if (showPlan)
                 Consumer(
                   builder: (context, ref, _) {
-                    final planAsync = ref.watch(planProvider);
+                    final planAsync = ref.watch(CreatePlan_Provider_Controller);
 
                     return planAsync.when(
                       data: (plan) {
@@ -395,7 +398,7 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
           if (showPlan == true)
             Consumer(
               builder: (context, ref, _) {
-                final planState = ref.watch(planProvider);
+                final planState = ref.watch(CreatePlan_Provider_Controller);
                 return planState.maybeWhen(
                   data: (plan) => plan != null
                       ? Positioned(
@@ -405,6 +408,10 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
                           child: ElevatedButton(
                             onPressed: () async {
                               await HiveService.saveWorkoutPlan('myPlan', plan);
+                              final id = await SharedPrefHelper.getUserID();
+                              await setGoal([1, 2], plan, id!);
+                              ref.invalidate(todayTaskProvider); // Rebuild with updated data
+
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(

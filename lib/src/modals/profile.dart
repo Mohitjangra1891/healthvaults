@@ -1,7 +1,7 @@
-class Profile {
+class MyProfile {
   final String letter;
   final String name;
 
-  Profile({required this.letter, required this.name});
+  MyProfile({required this.letter, required this.name});
 }
 

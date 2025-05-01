@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
-
-import '../../../res/appColors.dart';
-import '../../../utils/themes/themeProvider.dart';
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:healthvaults/src/utils/router.dart';
+
+import '../../../common/views/widgets/toast.dart';
+import '../../../res/appColors.dart';
+import '../controller/authController.dart';
 
 class OtpVerificationScreen extends ConsumerStatefulWidget {
   final String phoneNumber;
@@ -70,43 +71,61 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
 
   void verifyOtp() {
     if (controllers.any((controller) => controller.text.isEmpty)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter all digits")),
-      );
+      showToast("Please enter All digits");
+
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(content: Text("Please enter all digits")),
+      // );
       return;
     }
 
     String otp = controllers.map((controller) => controller.text).join();
     print("Entered OTP: $otp");
+    ref.read(authProvider.notifier).verifyOtp(widget.phoneNumber, otp);
 
-    // ref.read(authProvider.notifier).verifyOtp(91, int.parse( widget.phoneNumber), int.parse(otp), context, ref);
     controllers.map((controller) => controller.clear());
-    // Implement OTP verification logic here
   }
 
   void resendOtp() {
     if (countdown == 0) {
       startTimer();
       print("Resending OTP...");
-      // Call your OTP resend API here
+      ref.read(authProvider.notifier).sendOtp((widget.phoneNumber));
     }
   }
 
   @override
   Widget build(BuildContext context) {
     // final verifyOtpState = ref.watch(verifyOtpStateProvider);
+    final authState = ref.watch(authProvider);
+
+    ref.listen(authProvider, (prev, next) async {
+      if (next is OTPVerified) {
+        if (!next.data.data.existingUser! && next.data.data.user.token == null ) {
+          // context.goNamed(routeNames.addDetails);
+          context.push("${routeNames.addDetails}/${widget.phoneNumber}");
+
+        } else {
+          context.goNamed(routeNames.home);
+        }
+      } else if (next is AuthError) {
+        showToast( next.message);
+
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(next.message)));
+      }
+    });
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 60),
             Center(
               child: Image.asset(
-                'assets/Logo.png', // Replace with your logo asset
+                'assets/logo.png', // Replace with your logo asset
                 height: 120,
               ),
             ),
@@ -139,18 +158,18 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               ),
             ),
             const SizedBox(height: 15),
-
             TextButton(
               onPressed: () {
                 context.pop();
-              }, child: Text(
-              'Change Mobile Number',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primaryColor,
+              },
+              child: Text(
+                'Change Mobile Number',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
               ),
-            ),
             ),
             const SizedBox(height: 30),
             Row(
@@ -196,106 +215,27 @@ class _OtpVerificationScreenState extends ConsumerState<OtpVerificationScreen> {
               ),
             ),
             const SizedBox(height: 50),
-        SizedBox(
-          width: double.infinity,
-          height: 50,
-          child: ElevatedButton(
-            onPressed: verifyOtp,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-            child: Text(
-              'Verify Otp',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-            ),
-          ),
-        ),
-            // verifyOtpState.when(
-            //   data: (_) {
-            //     return SizedBox(
-            //       width: double.infinity,
-            //       height: 50,
-            //       child: ElevatedButton(
-            //         onPressed: verifyOtp,
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: AppColors.primary_color,
-            //           shape: RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(8),
-            //           ),
-            //         ),
-            //         child: Text(
-            //           'Verify Otp',
-            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   loading: () => const Center(
-            //       child: CircularProgressIndicator(
-            //         color: AppColors.primary_color,
-            //       )),
-            //   error: (Object error, StackTrace stackTrace) {
-            //     return SizedBox(
-            //       width: double.infinity,
-            //       height: 50,
-            //       child: ElevatedButton(
-            //         onPressed: verifyOtp,
-            //         style: ElevatedButton.styleFrom(
-            //           backgroundColor: AppColors.primary_color,
-            //           shape: RoundedRectangleBorder(
-            //             borderRadius: BorderRadius.circular(8),
-            //           ),
-            //         ),
-            //         child: Text(
-            //           'Verify Otp',
-            //           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-            //         ),
-            //       ),
-            //     );
-            //   },
-            //   // Show loader while API call is in progress
-            //   // error: (err, _) => Text('Error: $err'),
-            // ),
-            // const SizedBox(height: 100),
+            authState is AuthLoading
+                ? CircularProgressIndicator()
+                : SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: verifyOtp,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        'Verify Otp',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                      ),
+                    ),
+                  ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-
-
-
-class HomePage extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeNotifierProvider);
-    final themeNotifier = ref.read(themeNotifierProvider.notifier);
-
-    return Scaffold(
-      appBar: AppBar(title: Text('Theme Toggle')),
-      body: Column(
-        children: [
-          Text(
-            "Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii",
-            style: TextStyle(
-              fontSize: 22,
-            ),
-          ),
-          Center(
-            child: SwitchListTile(
-              title: Text('Dark Mode'),
-              value: themeMode == ThemeMode.dark,
-              onChanged: (isDark) {
-                themeNotifier.setTheme(isDark ? ThemeMode.dark : ThemeMode.light);
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

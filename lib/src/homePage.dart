@@ -6,7 +6,9 @@ import 'package:healthvaults/src/features/healthTab/views/healthTabScreen.dart';
 import 'package:healthvaults/src/res/appColors.dart';
 
 import 'features/recordsTab/recordTabScreen.dart';
-import 'features/recordsTab/widgets/addNewRecordSheet.dart';
+import 'features/recordsTab/records/views/widgets/addNewRecordSheet.dart';
+
+
 
 class NavBarVisibilityNotifier extends StateNotifier<bool> {
   NavBarVisibilityNotifier() : super(true); // default: visible
@@ -54,6 +56,7 @@ class _FancyFloatingNavBarState extends ConsumerState<FloatingNavBarScreen> with
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       extendBody: true,
       body: Stack(
         children: [
@@ -86,7 +89,7 @@ class _FancyFloatingNavBarState extends ConsumerState<FloatingNavBarScreen> with
                     opacity: isVisible ? 1 : 0,
                     child: FloatingActionButton(
                       onPressed: () {
-                        showCustomBottomSheet(context);
+                        add_New_RECORD_BottomSheet(context);
                         // Add your logic here
                       },
                       backgroundColor: isDark ? Colors.white : AppColors.primaryColor,

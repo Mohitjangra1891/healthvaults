@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthvaults/src/features/healthTab/views/todayExcerciseScreen.dart';
 import 'package:healthvaults/src/features/healthTab/views/widgets/noPlanScreen.dart';
 import 'package:healthvaults/src/utils/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../common/controller/userController.dart';
+import '../../../common/views/widgets/imagwWidget.dart';
 import '../../../modals/workoutPlan.dart';
 import '../../../res/appColors.dart';
 import '../../../res/appImages.dart';
@@ -23,6 +26,7 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
   @override
   Widget build(BuildContext context) {
     super.build(context); // IMPORTANT for keep alive!
+    debugPrint('🔄 Widget rebuilt: ${context.widget.runtimeType}');
 
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
@@ -42,15 +46,16 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
                     onTap: () => Scaffold.of(context).openDrawer(),
                     child: Row(
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(18),
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryColor,
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.white),
-                          ),
-                          child: Text('M', style: TextStyle(color: Colors.white, fontSize: 24)),
-                        ),
+                        // Container(
+                        //   padding: EdgeInsets.all(18),
+                        //   decoration: BoxDecoration(
+                        //     color: AppColors.primaryColor,
+                        //     shape: BoxShape.circle,
+                        //     border: Border.all(color: Colors.white),
+                        //   ),
+                        //   child: Text('M', style: TextStyle(color: Colors.white, fontSize: 24)),
+                        // ),
+                        UserProfileDpScreen(),
                         SizedBox(width: 8),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,11 +65,17 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
                                 style: TextStyle(
                                   fontSize: 16,
                                 )),
-                            Text("mohit jangra",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                )),
+                            Consumer(
+                              builder: (context, ref, _) {
+                                final userName = ref.watch(userNameProvider);
+
+                                return Text(userName,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ));
+                              },
+                            ),
                           ],
                         ),
                       ],
@@ -92,9 +103,12 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
               return Padding(
                 padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
                 child: savedPlan != null
-                    ? WorkoutTodayScreen(
+                    ? TodaysTaskScreen(
                         workoutPlan: savedPlan,
                       )
+                    // ?WorkoutTodayScreen(
+                    //         workoutPlan: savedPlan,
+                    //       )
                     : noPlanScreen(),
               );
             }),
@@ -128,7 +142,9 @@ Drawer buildDrawer(BuildContext context) {
       children: [
         Container(
           padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(top: 48,),
+          margin: const EdgeInsets.only(
+            top: 48,
+          ),
           child: Row(
             children: [
               Hero(
@@ -173,19 +189,20 @@ Drawer buildDrawer(BuildContext context) {
           onTap: () {
             // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
           },
-        ),  ListTile(
+        ),
+        ListTile(
           leading: const Icon(Icons.calendar_today_outlined),
           title: const Text('My Goals'),
           onTap: () {
             context.pushNamed(routeNames.Mygoalscreen);
             // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
           },
-        ), ListTile(
+        ),
+        ListTile(
           leading: const Icon(Icons.privacy_tip_outlined),
           title: const Text('Change Goal'),
           onTap: () {
             context.pushNamed(routeNames.SetYourGoalScreen);
-
 
             // Navigator.of(context).pushNamed(AppRouter.settingsRoute);
           },
