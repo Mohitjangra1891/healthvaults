@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthvaults/src/app.dart';
 import 'package:healthvaults/src/modals/TaskEntity.dart';
+import 'package:healthvaults/src/modals/WeeklyWorkoutPlan.dart';
 import 'package:healthvaults/src/modals/workoutPlan.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -26,6 +27,7 @@ try{
 
   }
 
+  Hive.registerAdapter(WorkoutPlan2Adapter());
   Hive.registerAdapter(WorkoutPlanAdapter());
   Hive.registerAdapter(WorkoutMonthAdapter());
   Hive.registerAdapter(TaskEntityAdapter());

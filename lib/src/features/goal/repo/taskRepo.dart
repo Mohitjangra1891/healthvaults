@@ -5,6 +5,7 @@ import 'package:hive/hive.dart';
 
 import '../../../modals/TaskEntity.dart';
 import '../../../modals/workoutPlan.dart';
+import '../../../modals/WeeklyWorkoutPlan.dart';
 
 class TaskService {
   static const _taskBoxName = 'tasks';

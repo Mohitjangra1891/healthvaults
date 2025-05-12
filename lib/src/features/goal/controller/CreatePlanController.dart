@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
+import '../../../modals/WeeklyWorkoutPlan.dart';
 import '../../../modals/workoutPlan.dart';
 import '../../../res/const.dart';
 
@@ -34,9 +35,11 @@ class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan?>> {
       final jsonData = json.decode(cleanedJson);
       log(jsonData.toString());
       final plan = WorkoutPlan.fromJson(jsonData);
+      final plan2 = WorkoutPlan2.fromJson(jsonData);
+      log(plan2.workouts.toString());
       state = AsyncValue.data(plan);
     } catch (e, st) {
-      print("Error in fetchWorkoutPlan: $e");
+      log("Error in fetchWorkoutPlan: $e");
 
       state = AsyncValue.error(e, st);
     }
