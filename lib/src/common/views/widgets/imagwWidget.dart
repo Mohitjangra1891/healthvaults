@@ -90,6 +90,11 @@ class _DownloadedImageViewerState extends State<DownloadedImageViewer> {
   Future<void> fetchImageBytes() async {
     try {
       final response = await http.get(Uri.parse(widget.imageUrl));
+      print("image Widget");
+      print(response);
+      print(response.statusCode);
+      print(response.body);
+
       if (response.statusCode == 200) {
         setState(() {
           imageBytes = response.bodyBytes;

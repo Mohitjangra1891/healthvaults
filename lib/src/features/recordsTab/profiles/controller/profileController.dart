@@ -57,6 +57,7 @@ class ProfilesController extends StateNotifier<AsyncValue<List<Profile>>> {
       // await SharedPrefHelper.saveDP(userProfile.dp ?? "");
     } catch (e, st) {
       state = AsyncError(e, st);
+
     }
   }
 

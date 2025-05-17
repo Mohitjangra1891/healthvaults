@@ -2,7 +2,7 @@ import 'package:hive/hive.dart';
 
 part 'WeeklyWorkoutPlan.g.dart';
 
-@HiveType(typeId: 0)
+@HiveType(typeId: 4)
 class WorkoutPlan2 extends HiveObject {
   @HiveField(0)
   final String planName;
@@ -59,7 +59,7 @@ class WorkoutPlan2 extends HiveObject {
   }
 }
 
-@HiveType(typeId: 1)
+@HiveType(typeId: 5)
 class WorkoutDay extends HiveObject {
   @HiveField(0)
   final String theme;
@@ -107,7 +107,7 @@ class WorkoutDay extends HiveObject {
   }
 }
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 6)
 class RoutineItem extends HiveObject {
   @HiveField(0)
   final String? warmUp;

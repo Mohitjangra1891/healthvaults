@@ -129,8 +129,9 @@ import '../demoExercise/exerciseDetailScreen.dart';
 // }
 class ExerciseCard2 extends ConsumerWidget {
   final TaskEntity exercise;
+  final VoidCallback onStart;
 
-  const ExerciseCard2({super.key, required this.exercise});
+  const ExerciseCard2({super.key, required this.exercise,required this.onStart,});
 
   @override
   Widget build(BuildContext context ,WidgetRef ref) {
@@ -143,17 +144,18 @@ class ExerciseCard2 extends ConsumerWidget {
     return Stack(
       children: [
         GestureDetector(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DemoScreen(
-                          type: exercise.title,
-                          excercise: exercise.value,
-                          duration: exercise.description,
-                        )));
-            // context.pushNamed(routeNames.demoScreen);
-          },
+          onTap: onStart,
+          // onTap: () {
+          //   Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => DemoScreen(
+          //                 type: exercise.title,
+          //                 excercise: exercise.value,
+          //                 duration: exercise.description,
+          //               )));
+          //   // context.pushNamed(routeNames.demoScreen);
+          // },
           child: Container(
             width: screenWidth * 0.50,
             decoration: BoxDecoration(
@@ -174,14 +176,15 @@ class ExerciseCard2 extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  exercise.value,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                ExpandableText(text: exercise.value,),
+                // Text(
+                //   exercise.value,
+                //   style: TextStyle(
+                //     color: Colors.white,
+                //     fontSize: 18,
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
                 const SizedBox(height: 4),
                 Text(
                   exercise.description,
@@ -262,6 +265,39 @@ class ExerciseCard2 extends ConsumerWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ExpandableText extends StatefulWidget {
+  final String text;
+
+  const ExpandableText({super.key, required this.text});
+
+  @override
+  State<ExpandableText> createState() => _ExpandableTextState();
+}
+
+class _ExpandableTextState extends State<ExpandableText> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _isExpanded = !_isExpanded;
+        });
+      },
+      child: Text(
+        widget.text,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),        maxLines: _isExpanded ? null : 2,
+        overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+      ),
     );
   }
 }

@@ -47,7 +47,7 @@ class AuthController extends StateNotifier<AuthState> {
   Future<void> sendOtp(String phone) async {
     state = AuthLoading();
     try {
-      final res = await ApiClient.post('otp/send', body: {"phoneNumber": "+91$phone"});
+      final res = await ApiClient.post('otp/send', body: {"phoneNumber": "$phone"});
       print(res);
       log(res.toString(), name: "AuthContoller/ sendOTP");
 

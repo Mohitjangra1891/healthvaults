@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healthvaults/src/common/views/planScreen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import '../../../modals/WeeklyWorkoutPlan.dart';
 import '../../../modals/workoutPlan.dart';
 
 class Mygoalscreen extends StatelessWidget {
@@ -15,13 +16,13 @@ class Mygoalscreen extends StatelessWidget {
 
       appBar: AppBar(title: Text("My Goal"),automaticallyImplyLeading: false,centerTitle: true,),
       body: ValueListenableBuilder(
-          valueListenable: Hive.box<WorkoutPlan>('workoutPlans').listenable(keys: ['myPlan']),
-          builder: (context, Box<WorkoutPlan> box, _) {
+          valueListenable: Hive.box<WorkoutPlan2>('workoutPlan2').listenable(keys: ['myPlan']),
+          builder: (context, Box<WorkoutPlan2> box, _) {
             final savedPlan = box.get('myPlan');
 
             return SingleChildScrollView(
               child: savedPlan != null
-                  ? planScreen(workoutPlan: savedPlan!)
+                  ? WorkoutPlanScreen(plan: savedPlan!)
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:healthvaults/src/utils/router.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
 
 import '../../../common/views/widgets/button.dart';
 import '../../../common/views/widgets/toast.dart';
 import '../../../res/appColors.dart';
 import '../controller/authController.dart';
-import 'otpVerifyScreen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   @override
@@ -18,6 +18,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   bool chechBoxValue = true;
   final TextEditingController _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late String phoneNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -27,11 +28,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     ref.listen(authProvider, (prev, next) {
       if (next is OTPSent) {
-        context.push("${routeNames.otpVerify}/${ _phoneController.text}");
+        context.push("${routeNames.otpVerify}/${_phoneController.text}");
 
         // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpVerificationScreen(phoneNumber: _phoneController.text)));
       } else if (next is AuthError) {
-        showToast(next.message );
+        showToast(next.message);
 
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(next.message)));
       }
@@ -72,93 +73,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 4),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: TextFormField(
-                      autofocus: false,
-                      readOnly: true,
-                      keyboardType: TextInputType.phone,
-                      decoration: InputDecoration(
-                        hintText: '+91',
-                        hintStyle: TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.w400),
+              Form(
+                key: _formKey,
+                child: IntlPhoneField(
+                  controller: _phoneController,
+                  // disableLengthCheck: true,
+                  flagsButtonPadding: const EdgeInsets.all(8),
+                  dropdownIconPosition: IconPosition.trailing,
+                  decoration: InputDecoration(
+                    hintText: 'Mobile Number',
+                    hintStyle: TextStyle(fontSize: 12, color: Color.fromRGBO(204, 204, 204, 1), fontWeight: FontWeight.w400),
 
-                        // No border
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
-                        ),
-                        disabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
-                        ),
-                      ),
+                    // No border
+                    errorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: BorderSide(color: AppColors.primaryColor),
+                    ),
+                    focusedErrorBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: BorderSide(color: AppColors.primaryColor),
+                    ),
+                    disabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(4),
+                      borderSide: BorderSide(color: Colors.grey),
                     ),
                   ),
-                  SizedBox(
-                    width: 12,
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Form(
-                      key: _formKey,
-                      child: TextFormField(
-                        onTapOutside: (PointerDownEvent) {
-                          FocusScope.of(context).unfocus();
-                        },
-                        autofocus: false,
-                        controller: _phoneController,
-                        keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          hintText: 'Mobile Number',
-                          hintStyle: TextStyle(fontSize: 12, color: Color.fromRGBO(204, 204, 204, 1), fontWeight: FontWeight.w400),
-
-                          // No border
-                          errorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Theme.of(context).colorScheme.onBackground),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: AppColors.primaryColor),
-                          ),
-                          focusedErrorBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: AppColors.primaryColor),
-                          ),
-                          disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   const SnackBar(content: Text("Please enter your phone number")),
-                            // );
-                            return 'Please enter your phone number';
-                          } else if (value.replaceAll(RegExp(r'\D'), '').length != 10) {
-                            // ScaffoldMessenger.of(context).showSnackBar(
-                            //   const SnackBar(content: Text("Enter a valid 10-digit phone number")),
-                            // );
-                            return 'Enter a valid 10-digit phone number';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+                  initialCountryCode: 'IN',
+                  showCursor: true,
+                  showDropdownIcon: true,
+                  onChanged: (phone) {
+                    print(phone.completeNumber);
+                    phoneNumber = phone.completeNumber;
+                  },
+                  validator: (value) {
+                    if (value == null || value.number.isEmpty) {
+                      return 'Please enter your phone number';
+                    }
+                    return null;
+                  },
+                ),
               ),
+
               const SizedBox(height: 12),
               Center(
                 child: const Text(
@@ -169,22 +132,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 20),
               authState is AuthLoading
-                  ? CircularProgressIndicator()
-                  :   SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: button_Primary(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ref.read(authProvider.notifier).sendOtp(_phoneController.text.trim());
-
-                        // context.push("${routeNames.otpVerify}/${_phoneController.text.trim()}");
-                      } else {
-                        print("Validation failed");
-                      }
-                    },
-                    title: "Continue"),
-              ),
+                  ? Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: button_Primary(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              ref.read(authProvider.notifier).sendOtp(phoneNumber);
+                              print("sending otp to ${phoneNumber}");
+                              //
+                            } else {
+                              print("Validation failed");
+                            }
+                          },
+                          title: "Continue"),
+                    ),
             ],
           ),
         ),

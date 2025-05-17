@@ -189,390 +189,398 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
       ),
       body: Stack(
         children: [
-          ListView(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            children: [
-              AnimatedSize(
-                duration: Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-                child: showDetails
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(height: 32),
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                // padding: EdgeInsets.symmetric(horizontal: 16),
+                children: [
+                  AnimatedSize(
+                    duration: Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    child: showDetails
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 32),
 
-                          Material(
-                            elevation: 8,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Material(
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Age', style: TextStyle( fontSize: 18)),
-                                            SizedBox(height: 2),
-                                            TextField(
-                                              onTapOutside: (PointerDownEvent) {
-                                                FocusScope.of(context).unfocus();
-                                              },
-                                              controller: ageController,
-                                              keyboardType: TextInputType.number,
-                                              decoration: numberFieldDecoration().copyWith(hintText: "years"),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Age', style: TextStyle( fontSize: 18)),
+                                                SizedBox(height: 2),
+                                                TextField(
+                                                  onTapOutside: (PointerDownEvent) {
+                                                    FocusScope.of(context).unfocus();
+                                                  },
+                                                  controller: ageController,
+                                                  keyboardType: TextInputType.number,
+                                                  decoration: numberFieldDecoration().copyWith(hintText: "years"),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: screenWidth * 0.12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Height', style: TextStyle( fontSize: 18)),
-                                            SizedBox(height: 2),
-                                            TextField(
-                                              onTapOutside: (PointerDownEvent) {
-                                                FocusScope.of(context).unfocus();
-                                              },
-                                              controller: heightController,
-                                              keyboardType: TextInputType.number,
-                                              decoration: numberFieldDecoration().copyWith(hintText: "cm"),
+                                          ),
+                                          SizedBox(width: screenWidth * 0.12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Height', style: TextStyle( fontSize: 18)),
+                                                SizedBox(height: 2),
+                                                TextField(
+                                                  onTapOutside: (PointerDownEvent) {
+                                                    FocusScope.of(context).unfocus();
+                                                  },
+                                                  controller: heightController,
+                                                  keyboardType: TextInputType.number,
+                                                  decoration: numberFieldDecoration().copyWith(hintText: "cm"),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(width: screenWidth * 0.12),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text('Weight', style: TextStyle(fontSize: 18)),
-                                            SizedBox(height: 2),
-                                            TextField( onTapOutside: (PointerDownEvent) {
-                                              FocusScope.of(context).unfocus();
-                                            },
-                                              controller: weightController,
-                                              keyboardType: TextInputType.number,
-                                              decoration: numberFieldDecoration().copyWith(hintText: "kg"),
+                                          ),
+                                          SizedBox(width: screenWidth * 0.12),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text('Weight', style: TextStyle(fontSize: 18)),
+                                                SizedBox(height: 2),
+                                                TextField( onTapOutside: (PointerDownEvent) {
+                                                  FocusScope.of(context).unfocus();
+                                                },
+                                                  controller: weightController,
+                                                  keyboardType: TextInputType.number,
+                                                  decoration: numberFieldDecoration().copyWith(hintText: "kg"),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
 
-                          SizedBox(height: 32),
-                          Material(
-                            elevation: 8,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  TrainingDurationSelector(
-                                    selected: selectedDuration,
-                                    onChanged: (val) => setState(() => selectedDuration = val),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Material(
-                            elevation: 8,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  DifficultySelector(
-                                    selected: selectedDifficulty,
-                                    onChanged: (val) => setState(() => selectedDifficulty = val),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Material(
-                            elevation: 8,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('WEEKLY SCHEDULE', style: Theme.of(context).textTheme.labelLarge),
-                                  const SizedBox(height: 8),
-                                  WeekdaySelector(
-                                    selectedIndices: _selectedWeekdays,
-                                    onChanged: (days) => setState(() => _selectedWeekdays = days),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          Material(
-                            elevation: 10,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('WORKOUT LOCATION', style: Theme.of(context).textTheme.labelLarge?.copyWith()),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    spacing: 10,
+                              SizedBox(height: 32),
+                              Material(
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        child: buildSelectableOption2(
-                                            'Home', CupertinoIcons.home, workoutLocation == 'Home', () => setState(() => workoutLocation = 'Home')),
-                                      ),
-                                      // SizedBox(width: screenWidth * 0.12),
-                                      Expanded(
-                                          child: buildSelectableOption2(
-                                              'Gym', Icons.fitness_center, workoutLocation == 'Gym', () => setState(() => workoutLocation = 'Gym'))),
-                                    ],
-                                  ),
-
-                                  // LocationPicker(
-                                  //   selected: workoutLocation,
-                                  //   onChanged: (loc) => setState(() => workoutLocation = loc),
-                                  // ),
-
-                                  // only show equipments if “home”:
-                                  if (workoutLocation == 'Home') ...[
-                                    const SizedBox(height: 24),
-                                    Text('Equipments available at home:'),
-                                    EquipmentSelector(
-                                      allItems: ['Yoga Mat', 'Resist Band', 'Skipping Rope', 'Hand Weights'],
-                                      onChanged: (lst) => setState(() => _equipment = lst),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 32),
-                          Material(
-                            elevation: 8,
-                            borderRadius: BorderRadius.circular(12),
-                            color: isDark ? Colors.grey[800]! : Colors.white!,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('YOUR GOAL', style: Theme.of(context).textTheme.labelLarge?.copyWith()),
-                                  SizedBox(height: 8),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      buildSelectableOption(
-                                        'Lose Weight',
-                                        appImages.weightLoss,
-                                        selectedGoals.contains('Lose Weight'),
-                                            () => toggleGoal('Lose Weight'),
-                                      ),
-                                      buildSelectableOption(
-                                        'Build Strength',
-                                        appImages.strength,
-                                        selectedGoals.contains('Strength Gain'),
-                                            () => toggleGoal('Strength Gain'),
-                                      ),
-                                      buildSelectableOption(
-                                        'Improve Flexibility',
-                                        appImages.flexibility,
-                                        selectedGoals.contains('flexibility'),
-                                            () => toggleGoal('flexibility'),
+                                      TrainingDurationSelector(
+                                        selected: selectedDuration,
+                                        onChanged: (val) => setState(() => selectedDuration = val),
                                       ),
                                     ],
                                   ),
-                                  SizeTransition(
-                                    sizeFactor: _fadeAnimation,
-                                    axisAlignment: -1,
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        SizedBox(height: 24),
-                                        Text("What's your total weight loss goal: ${weightLossGoal.toInt()} kg", style: TextStyle(color: textColor)),
-                                        Slider(
-                                          value: weightLossGoal,
-                                          min: 2,
-                                          max: 25,
-                                          activeColor: borderColor,
-                                          onChanged: (val) => setState(() => weightLossGoal = val),
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Material(
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      DifficultySelector(
+                                        selected: selectedDifficulty,
+                                        onChanged: (val) => setState(() => selectedDifficulty = val),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Material(
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('WEEKLY SCHEDULE', style: Theme.of(context).textTheme.labelLarge),
+                                      const SizedBox(height: 8),
+                                      WeekdaySelector(
+                                        selectedIndices: _selectedWeekdays,
+                                        onChanged: (days) => setState(() => _selectedWeekdays = days),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Material(
+                                elevation: 10,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('WORKOUT LOCATION', style: Theme.of(context).textTheme.labelLarge?.copyWith()),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        spacing: 10,
+                                        children: [
+                                          Expanded(
+                                            child: buildSelectableOption2(
+                                                'Home', CupertinoIcons.home, workoutLocation == 'Home', () => setState(() => workoutLocation = 'Home')),
+                                          ),
+                                          // SizedBox(width: screenWidth * 0.12),
+                                          Expanded(
+                                              child: buildSelectableOption2(
+                                                  'Gym', Icons.fitness_center, workoutLocation == 'Gym', () => setState(() => workoutLocation = 'Gym'))),
+                                        ],
+                                      ),
+
+                                      // LocationPicker(
+                                      //   selected: workoutLocation,
+                                      //   onChanged: (loc) => setState(() => workoutLocation = loc),
+                                      // ),
+
+                                      // only show equipments if “home”:
+                                      if (workoutLocation == 'Home') ...[
+                                        const SizedBox(height: 24),
+                                        Text('Equipments available at home:'),
+                                        EquipmentSelector(
+                                          allItems: ['Yoga Mat', 'Resist Band', 'Skipping Rope', 'Hand Weights'],
+                                          onChanged: (lst) => setState(() => _equipment = lst),
                                         ),
                                       ],
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
+                              SizedBox(height: 32),
+                              Material(
+                                elevation: 8,
+                                borderRadius: BorderRadius.circular(12),
+                                color: isDark ? Colors.grey[800]! : Colors.white!,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text('YOUR GOAL', style: Theme.of(context).textTheme.labelLarge?.copyWith()),
+                                      SizedBox(height: 8),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          buildSelectableOption(
+                                            'Lose Weight',
+                                            appImages.weightLoss,
+                                            selectedGoals.contains('Lose Weight'),
+                                                () => toggleGoal('Lose Weight'),
+                                          ),
+                                          buildSelectableOption(
+                                            'Build Strength',
+                                            appImages.strength,
+                                            selectedGoals.contains('Strength Gain'),
+                                                () => toggleGoal('Strength Gain'),
+                                          ),
+                                          buildSelectableOption(
+                                            'Improve Flexibility',
+                                            appImages.flexibility,
+                                            selectedGoals.contains('flexibility'),
+                                                () => toggleGoal('flexibility'),
+                                          ),
+                                        ],
+                                      ),
+                                      SizeTransition(
+                                        sizeFactor: _fadeAnimation,
+                                        axisAlignment: -1,
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            SizedBox(height: 24),
+                                            Text("What's your total weight loss goal: ${weightLossGoal.toInt()} kg", style: TextStyle(color: textColor)),
+                                            Slider(
+                                              value: weightLossGoal,
+                                              min: 2,
+                                              max: 25,
+                                              activeColor: borderColor,
+                                              onChanged: (val) => setState(() => weightLossGoal = val),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
 
-                          const SizedBox(height: 32),
-                          TargetAreaSelector(
-                            selected: selectedTarget,
-                            onChanged: (val) => setState(() => selectedTarget = val),
-                          ),
-                          SizedBox(height: 32),
-                          Container(
-                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
-                            margin: const EdgeInsets.symmetric(horizontal: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              children: [
-                                ToggleOption(
-                                  title: 'Warm-Up',
-                                  subtitle: '+3-5 minutes before workout',
-                                  value: warmUp,
-                                  onChanged: (val) => setState(() => warmUp = val),
-                                ),
-                                Divider(
-                                  color: Colors.grey,
-                                  thickness: 0.5,
-                                  indent: 4,
-                                  endIndent: 4,
-                                ),
-                                ToggleOption(
-                                  title: 'Cool Down',
-                                  subtitle: '+3-5 minutes after workout',
-                                  value: coolDown,
-                                  onChanged: (val) => setState(() => coolDown = val),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 32),
+                              const SizedBox(height: 32),
+                              // TargetAreaSelector(
+                              //   selected: selectedTarget,
+                              //   onChanged: (val) => setState(() => selectedTarget = val),
+                              // ),
+                              // SizedBox(height: 32),
+                              // Container(
+                              //   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+                              //   margin: const EdgeInsets.symmetric(horizontal: 4),
+                              //   decoration: BoxDecoration(
+                              //     color: Colors.grey.withOpacity(0.2),
+                              //     borderRadius: BorderRadius.circular(12),
+                              //   ),
+                              //   child: Column(
+                              //     children: [
+                              //       ToggleOption(
+                              //         title: 'Warm-Up',
+                              //         subtitle: '+3-5 minutes before workout',
+                              //         value: warmUp,
+                              //         onChanged: (val) => setState(() => warmUp = val),
+                              //       ),
+                              //       Divider(
+                              //         color: Colors.grey,
+                              //         thickness: 0.5,
+                              //         indent: 4,
+                              //         endIndent: 4,
+                              //       ),
+                              //       ToggleOption(
+                              //         title: 'Cool Down',
+                              //         subtitle: '+3-5 minutes after workout',
+                              //         value: coolDown,
+                              //         onChanged: (val) => setState(() => coolDown = val),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              // const SizedBox(height: 32),
 
-                        ],
-                      )
-                    : SizedBox.shrink(),
-              ),
-              OutlinedButton(
-                onPressed: () {
-                  if (ageController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Age should not be empty")),
-                    );
-                  } else if (heightController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Height should not be empty")),
-                    );
-                  } else if (weightController.text.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Weight should not be empty")),
-                    );
-                  } else if (workoutLocation.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please choose a place for workout")),
-                    );
-                  } else if (selectedGoals.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("Please choose your goal")),
-                    );
-                  } else {
-                    if (isLoading == false) _loadPlan();
-                  }
-                },
-                style: OutlinedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
+                            ],
+                          )
+                        : SizedBox.shrink(),
                   ),
-                  side: BorderSide(color: borderColor, width: 1.8),
-                  // minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text(buttonText, style: TextStyle(color: borderColor, fontWeight: FontWeight.w500)),
-              ),
-              SizedBox(height: 16),
-              showPlan
-                  ? SizedBox.shrink()
-                  : Text(
-                      "Set your long term body transformation target. We'll create a manageable, personalized three months plan as your first milestone.",
-                      style: TextStyle(color: textColor),
+                  OutlinedButton(
+                    onPressed: () {
+                      if (ageController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Age should not be empty")),
+                        );
+                      } else if (heightController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Height should not be empty")),
+                        );
+                      } else if (weightController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Weight should not be empty")),
+                        );
+                      } else if (workoutLocation.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please choose a place for workout")),
+                        );
+                      } else if (selectedGoals.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please choose your goal")),
+                        );
+                      } else {
+                        if (isLoading == false) _loadPlan();
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      side: BorderSide(color: borderColor, width: 1.8),
+                      // minimumSize: Size(double.infinity, 50),
                     ),
+                    child: Text(buttonText, style: TextStyle(color: borderColor, fontWeight: FontWeight.w500)),
+                  ),
+                  SizedBox(height: 16),
+                  showPlan
+                      ? SizedBox.shrink()
+                      : Text(
+                          "Set your long term body transformation target. We'll create a manageable, personalized three months plan as your first milestone.",
+                          style: TextStyle(color: textColor),
+                        ),
 
-              // Conditional UI below button
-              if (showPlan)
-                Consumer(
-                  builder: (context, ref, _) {
-                    final planAsync = ref.watch(CreatePlan_Provider_Controller);
+                  // Conditional UI below button
+                  if (showPlan)
+                    Consumer(
+                      builder: (context, ref, _) {
+                        final planAsync = ref.watch(CreatePlan_Provider_Controller);
 
-                    return planAsync.when(
-                      data: (plan) {
-                        if (plan == null) {
-                          return const Text("No workout plan available.");
-                        }
-                        return Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        return planAsync.when(
+                          data: (plan) {
+                            if (plan == null) {
+                              return const Text("No workout plan available.");
+                            }
+                            return Column(
                               children: [
-                                difficulty_Buttton(
-                                  onPressed: () => _loadPlan(type: 1),
-                                  title: "Make it Easier",
-                                  image: 'assets/svg/arrowDown.svg',
-                                  color: Colors.greenAccent,
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    difficulty_Buttton(
+                                      onPressed: () => _loadPlan(type: 1),
+                                      title: "Make it Easier",
+                                      image: 'assets/svg/arrowDown.svg',
+                                      color: Colors.greenAccent,
+                                    ),
+                                    difficulty_Buttton(
+                                      onPressed: () => _loadPlan(type: 2),
+                                      title: "Challenge Me More",
+                                      image: 'assets/svg/arrowUp.svg',
+                                      color: Colors.redAccent,
+                                    ),
+                                  ],
                                 ),
-                                difficulty_Buttton(
-                                  onPressed: () => _loadPlan(type: 2),
-                                  title: "Challenge Me More",
-                                  image: 'assets/svg/arrowUp.svg',
-                                  color: Colors.redAccent,
+                                SingleChildScrollView(
+                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      "* Kindly go through all exercise before adding.",
+                                      style: TextStyle(fontWeight: FontWeight.w300),
+                                    ),
+                                    // planScreen(
+                                    //   workoutPlan: plan!,
+                                    // ),
+                                    WorkoutPlanScreen(
+                                      plan: plan!,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Text(
+                                      DISCLAIMER,
+                                      style: TextStyle(fontWeight: FontWeight.w300),
+                                    ),
+                                    const SizedBox(height: 62),
+                                  ]),
                                 ),
                               ],
-                            ),
-                            SingleChildScrollView(
-                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                const SizedBox(height: 12),
-                                Text(
-                                  "* Kindly go through all exercise before adding.",
-                                  style: TextStyle(fontWeight: FontWeight.w300),
-                                ),
-                                planScreen(
-                                  workoutPlan: plan!,
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  DISCLAIMER,
-                                  style: TextStyle(fontWeight: FontWeight.w300),
-                                ),
-                                const SizedBox(height: 62),
-                              ]),
-                            ),
-                          ],
+                            );
+                          },
+                          loading: () => Lottie.asset('assets/loading.json'),
+                          error: (error, stack) => Center(child: Text("Please Try Again .", style: TextStyle(fontSize: 24))),
                         );
                       },
-                      loading: () => Lottie.asset('assets/loading.json'),
-                      error: (error, stack) => Center(child: Text("Please Try Again .", style: TextStyle(fontSize: 24))),
-                    );
-                  },
-                ),
-            ],
+                    ),
+                ],
+              ),
+            ),
           ),
           if (showPlan == true)
             Consumer(
@@ -586,9 +594,13 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                           right: 16,
                           child: ElevatedButton(
                             onPressed: () async {
-                              await HiveService.saveWorkoutPlan('myPlan', plan);
+                              print("1");
+                              await HiveService.saveWorkoutPlan2('myPlan', plan);
                               final id = await SharedPrefHelper.getUserID();
-                              await setGoal([1, 2], plan, id!);
+                              // await setGoal([1, 2], plan, id!);
+                              print("2");
+
+                              await setWeekGoal([1, 2], plan, id!);
                               ref.invalidate(todayTaskProvider); // Rebuild with updated data
 
                               Navigator.pop(context);

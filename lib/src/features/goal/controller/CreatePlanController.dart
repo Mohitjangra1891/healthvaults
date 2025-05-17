@@ -8,7 +8,7 @@ import '../../../modals/WeeklyWorkoutPlan.dart';
 import '../../../modals/workoutPlan.dart';
 import '../../../res/const.dart';
 
-class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan?>> {
+class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan2?>> {
   // PlanNotifier() : super(const AsyncValue.loading());
 
   PlanNotifier() : super(const AsyncValue.data(null)); // Default state set to null
@@ -34,10 +34,12 @@ class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan?>> {
       final cleanedJson = rawText.replaceAll(RegExp(r'```json'), '').replaceAll(RegExp(r'```'), '').trim();
       final jsonData = json.decode(cleanedJson);
       log(jsonData.toString());
-      final plan = WorkoutPlan.fromJson(jsonData);
       final plan2 = WorkoutPlan2.fromJson(jsonData);
+
       log(plan2.workouts.toString());
-      state = AsyncValue.data(plan);
+      // final plan = WorkoutPlan.fromJson(jsonData);
+
+      state = AsyncValue.data(plan2);
     } catch (e, st) {
       log("Error in fetchWorkoutPlan: $e");
 
@@ -46,7 +48,7 @@ class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan?>> {
   }
 }
 
-final CreatePlan_Provider_Controller = StateNotifierProvider<PlanNotifier, AsyncValue<WorkoutPlan?>>(
+final CreatePlan_Provider_Controller = StateNotifierProvider<PlanNotifier, AsyncValue<WorkoutPlan2?>>(
   (ref) => PlanNotifier(),
 );
 

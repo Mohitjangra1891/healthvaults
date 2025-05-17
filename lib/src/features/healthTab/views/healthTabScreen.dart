@@ -8,6 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../common/controller/userController.dart';
 import '../../../common/views/widgets/imagwWidget.dart';
+import '../../../modals/WeeklyWorkoutPlan.dart';
 import '../../../modals/workoutPlan.dart';
 import '../../../res/appColors.dart';
 import '../../../res/appImages.dart';
@@ -96,21 +97,18 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
           ),
         ),
         body: ValueListenableBuilder(
-            valueListenable: Hive.box<WorkoutPlan>('workoutPlans').listenable(keys: ['myPlan']),
-            builder: (context, Box<WorkoutPlan> box, _) {
+            valueListenable: Hive.box<WorkoutPlan2>('workoutPlan2').listenable(keys: ['myPlan']),
+            builder: (context, Box<WorkoutPlan2> box, _) {
               final savedPlan = box.get('myPlan');
 
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
-                child: savedPlan != null
-                    ? TodaysTaskScreen(
-                        workoutPlan: savedPlan,
-                      )
-                    // ?WorkoutTodayScreen(
-                    //         workoutPlan: savedPlan,
-                    //       )
-                    : noPlanScreen(),
-              );
+              return savedPlan != null
+                  ? TodaysTaskScreen(
+                      workoutPlan: savedPlan,
+                    )
+                  // ?WorkoutTodayScreen(
+                  //         workoutPlan: savedPlan,
+                  //       )
+                  : noPlanScreen();
             }),
 
         // body : WorkoutTodayScreen(),

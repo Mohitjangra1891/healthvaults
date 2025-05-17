@@ -5,6 +5,7 @@ import 'package:healthvaults/src/res/appImages.dart';
 import 'package:healthvaults/src/utils/router.dart';
 
 import '../../features/recordsTab/profiles/controller/profileController.dart';
+import '../../features/recordsTab/records/controller/recordController.dart';
 import '../controller/userController.dart';
 import '../services/authSharedPrefHelper.dart';
 
@@ -36,9 +37,8 @@ class _SplashscreenState extends ConsumerState<Splashscreen> {
 
         ref.read(userNameProvider.notifier).state = userName ?? "Guest";
 
-        await ref.read(profilesProvider.notifier).fetchProfilesFromApi();
-        // await ref.read(profilesProvider.notifier).loadProfilesFromCache();
-        // await ref.read(recordListProvider.notifier).loadRecordFromCache();
+        // await ref.read(profilesProvider.notifier).fetchProfilesFromApi();
+        // await ref.read(recordListProvider.notifier).fetchInitial();
 
         context.goNamed(routeNames.home);
         // } else {
