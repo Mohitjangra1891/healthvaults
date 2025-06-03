@@ -47,8 +47,12 @@ class AuthController extends StateNotifier<AuthState> {
   Future<void> sendOtp(String phone) async {
     state = AuthLoading();
     try {
+      print("res");
+
       final res = await ApiClient.post('otp/send', body: {"phoneNumber": "$phone"});
       print(res);
+      print("es");
+
       log(res.toString(), name: "AuthContoller/ sendOTP");
 
       if (res['status'] == 202) {
@@ -57,6 +61,8 @@ class AuthController extends StateNotifier<AuthState> {
         state = AuthError("Failed to send OTP");
       }
     } catch (e) {
+      log(e.toString(), name: "AuthContoller/ sendOTP");
+
       state = AuthError(e.toString());
     }
   }

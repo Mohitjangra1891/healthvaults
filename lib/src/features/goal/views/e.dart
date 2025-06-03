@@ -9,7 +9,7 @@ class WeekdaySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const days = ['S','M','T','W','T','F','S'];
+    const days = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(days.length, (i) {
@@ -17,24 +17,31 @@ class WeekdaySelector extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             final newSet = Set<int>.from(selectedIndices);
-            if (isSelected) newSet.remove(i);
-            else newSet.add(i);
+            if (isSelected)
+              newSet.remove(i);
+            else
+              newSet.add(i);
             onChanged(newSet);
           },
           child: Container(
             width: 40,
             height: 56,
             decoration: BoxDecoration(
-              color:  Colors.transparent,
+              color: Colors.transparent,
               border: Border.all(
-                width:isSelected? 2:1,
-                color: isSelected ? Colors.blue: Colors.grey.withOpacity(0.2),
+                width: isSelected ? 2 : 1,
+                color: isSelected ? Colors.blue : Colors.grey.withOpacity(0.2),
               ),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Column(mainAxisAlignment: MainAxisAlignment.center,spacing: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 4,
               children: [
-                Icon(isSelected ? Icons.circle_rounded : Icons.circle_outlined ,size: 10,),
+                Icon(
+                  isSelected ? Icons.circle_rounded : Icons.circle_outlined,
+                  size: 10,
+                ),
                 Text(
                   days[i],
                   style: TextStyle(
@@ -61,7 +68,7 @@ class TrainingDurationSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final options = [ 30, 45,60 ,75,90 ,105,120];
+    final options = [30, 45, 60, 75, 90, 105, 120];
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -81,7 +88,7 @@ class TrainingDurationSelector extends StatelessWidget {
                 showCheckmark: false,
                 onSelected: (_) => onChanged(duration),
                 selectedColor: Colors.blue,
-                backgroundColor: isDark? Colors.transparent : Colors.white,
+                backgroundColor: isDark ? Colors.transparent : Colors.white,
                 labelPadding: EdgeInsets.all(6),
                 labelStyle: TextStyle(color: isSelected ? Colors.white : null),
               );
@@ -92,7 +99,6 @@ class TrainingDurationSelector extends StatelessWidget {
     );
   }
 }
-
 
 class TargetAreaSelector extends StatelessWidget {
   final String selected;
@@ -148,7 +154,6 @@ class TargetAreaSelector extends StatelessWidget {
   }
 }
 
-
 class DifficultySelector extends StatelessWidget {
   final String selected;
   final Function(String) onChanged;
@@ -160,34 +165,67 @@ class DifficultySelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final levels = ['Easy', 'Medium', 'Hard'];
+    // final levels = ['Easy', 'Medium', 'Hard'];
+    final levels = ['Newbie', 'Skilled', 'Pro'];
+    final images = ['assets/images/dumbell.png', 'assets/images/arm.png', 'assets/images/fire.png'];
+    final levels_sub = ['You are new to working out.', 'You have some experience.', 'Your are a Professional.'];
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("DIFFICULTY", style: Theme.of(context).textTheme.labelLarge),
+        Text("CHOOSE YOUR CURRENT LEVEL", style: Theme.of(context).textTheme.labelLarge),
         const SizedBox(height: 8),
         Row(
-          children: levels.map((level) {
+          spacing: 12,
+          children: levels.asMap().entries.map((entry) {
+            final index = entry.key;
+            final level = entry.value;
+            final subText = levels_sub[index];
+            final img = images[index];
             final isSelected = level == selected;
+
             return Expanded(
               child: GestureDetector(
                 onTap: () => onChanged(level),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.blue : Colors.transparent,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
-
-                  ),
-                  child: Center(
-                    child: Text(
-                      level,
-                      style: TextStyle(
-                        // color: isSelected ? Colors.white : Colors.black,
-                      ),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? Colors.grey[800]! : Colors.white!,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    // margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.blue : Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                      // border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 6,
+                      children: [
+                        Image.asset(
+                          img,
+                          color: isSelected ? Colors.white : Colors.black,
+                          height: 60,
+                        ),
+                        Text(
+                          level,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
+                        Text(
+                          subText,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -219,7 +257,7 @@ class ToggleOption extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       title: Text(title),
       subtitle: Text(subtitle),
-      trailing:Transform.scale(
+      trailing: Transform.scale(
         scale: 0.8,
         child: Switch(
           value: value,
@@ -232,4 +270,3 @@ class ToggleOption extends StatelessWidget {
     );
   }
 }
-

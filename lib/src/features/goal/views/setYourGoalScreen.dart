@@ -12,7 +12,9 @@ import 'package:lottie/lottie.dart';
 import '../../../common/services/loaclPlanStoreService.dart';
 import '../../../res/const.dart';
 import '../../../utils/prompt.dart';
+import '../../healthTab/controller/planController.dart';
 import '../../healthTab/controller/todayExcerciseController.dart';
+import '../../healthTab/views/widgets/exerciseCard.dart';
 import '../controller/CreatePlanController.dart';
 import 'e.dart';
 import 'g.dart';
@@ -26,16 +28,18 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
   final ageController = TextEditingController(text: "22");
   final heightController = TextEditingController(text: "180");
   final weightController = TextEditingController(text: "80");
-  int selectedDuration = 40;
+  int selectedDuration = 60;
   String selectedTarget = 'Full body';
   String selectedDifficulty = 'Medium';
   bool warmUp = true;
   bool coolDown = true;
   Set<int> _selectedWeekdays = {1, 3, 4, 5};
+
   String getSelectedDaysString() {
     List<String> weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     return _selectedWeekdays.map((day) => weekdays[day]).join(', ');
   }
+
   List<String> _equipment = [];
   String workoutLocation = '';
   final selectedGoals = <String>{};
@@ -105,7 +109,17 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
         return "Can you please make it harder? Respond with the same JSON structure only, no explanation or formatting.";
       default:
         // return prompt.getPromt(age: age, height: height, weight: weight, gender: gender, place: place, goals: goals);
-        return prompt.getPromt1(age: age, height: height, weight: weight, gender: gender, place: place, goals: goals, level: '', equipments: '', days: getSelectedDaysString(), time:"${selectedDuration}mins");
+        return prompt.getPromt1(
+            age: age,
+            height: height,
+            weight: weight,
+            gender: gender,
+            place: place,
+            goals: goals,
+            level: '',
+            equipments: '',
+            days: getSelectedDaysString(),
+            time: "${selectedDuration}mins");
     }
   }
 
@@ -150,15 +164,15 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
 
     InputDecoration numberFieldDecoration() => InputDecoration(
           border: OutlineInputBorder(
-            borderSide: BorderSide(  width: 1),
+            borderSide: BorderSide(width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide( width: 1),
+            borderSide: BorderSide(width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide( width: 1),
+            borderSide: BorderSide(width: 1),
             borderRadius: BorderRadius.circular(10),
           ),
         );
@@ -166,7 +180,7 @@ class _SetYourGoalScreenState extends ConsumerState<SetYourGoalScreen> with Sing
       appBar: AppBar(
         elevation: 5,
         // no shadow on scroll
-backgroundColor: isDark ? CupertinoColors.black:Colors.white,
+        backgroundColor: isDark ? CupertinoColors.black : Colors.white,
         automaticallyImplyLeading: false,
         title: Text('Set Your Goal', style: TextStyle(color: borderColor, fontWeight: FontWeight.w600, fontSize: 28)),
         actions: [
@@ -220,7 +234,7 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('Age', style: TextStyle( fontSize: 18)),
+                                                Text('Age', style: TextStyle(fontSize: 18)),
                                                 SizedBox(height: 2),
                                                 TextField(
                                                   onTapOutside: (PointerDownEvent) {
@@ -238,7 +252,7 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Text('Height', style: TextStyle( fontSize: 18)),
+                                                Text('Height', style: TextStyle(fontSize: 18)),
                                                 SizedBox(height: 2),
                                                 TextField(
                                                   onTapOutside: (PointerDownEvent) {
@@ -258,9 +272,10 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                               children: [
                                                 Text('Weight', style: TextStyle(fontSize: 18)),
                                                 SizedBox(height: 2),
-                                                TextField( onTapOutside: (PointerDownEvent) {
-                                                  FocusScope.of(context).unfocus();
-                                                },
+                                                TextField(
+                                                  onTapOutside: (PointerDownEvent) {
+                                                    FocusScope.of(context).unfocus();
+                                                  },
                                                   controller: weightController,
                                                   keyboardType: TextInputType.number,
                                                   decoration: numberFieldDecoration().copyWith(hintText: "kg"),
@@ -348,13 +363,13 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                         spacing: 10,
                                         children: [
                                           Expanded(
-                                            child: buildSelectableOption2(
-                                                'Home', CupertinoIcons.home, workoutLocation == 'Home', () => setState(() => workoutLocation = 'Home')),
+                                            child: buildSelectableOption2('Home', CupertinoIcons.home, workoutLocation == 'Home',
+                                                () => setState(() => workoutLocation = 'Home')),
                                           ),
                                           // SizedBox(width: screenWidth * 0.12),
                                           Expanded(
-                                              child: buildSelectableOption2(
-                                                  'Gym', Icons.fitness_center, workoutLocation == 'Gym', () => setState(() => workoutLocation = 'Gym'))),
+                                              child: buildSelectableOption2('Gym', Icons.fitness_center, workoutLocation == 'Gym',
+                                                  () => setState(() => workoutLocation = 'Gym'))),
                                         ],
                                       ),
 
@@ -395,19 +410,19 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                             'Lose Weight',
                                             appImages.weightLoss,
                                             selectedGoals.contains('Lose Weight'),
-                                                () => toggleGoal('Lose Weight'),
+                                            () => toggleGoal('Lose Weight'),
                                           ),
                                           buildSelectableOption(
                                             'Build Strength',
                                             appImages.strength,
                                             selectedGoals.contains('Strength Gain'),
-                                                () => toggleGoal('Strength Gain'),
+                                            () => toggleGoal('Strength Gain'),
                                           ),
                                           buildSelectableOption(
                                             'Improve Flexibility',
                                             appImages.flexibility,
                                             selectedGoals.contains('flexibility'),
-                                                () => toggleGoal('flexibility'),
+                                            () => toggleGoal('flexibility'),
                                           ),
                                         ],
                                       ),
@@ -418,7 +433,8 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                           crossAxisAlignment: CrossAxisAlignment.start,
                                           children: [
                                             SizedBox(height: 24),
-                                            Text("What's your total weight loss goal: ${weightLossGoal.toInt()} kg", style: TextStyle(color: textColor)),
+                                            Text("What's your total weight loss goal: ${weightLossGoal.toInt()} kg",
+                                                style: TextStyle(color: textColor)),
                                             Slider(
                                               value: weightLossGoal,
                                               min: 2,
@@ -471,45 +487,54 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                               //   ),
                               // ),
                               // const SizedBox(height: 32),
-
                             ],
                           )
                         : SizedBox.shrink(),
                   ),
-                  OutlinedButton(
-                    onPressed: () {
-                      if (ageController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Age should not be empty")),
-                        );
-                      } else if (heightController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Height should not be empty")),
-                        );
-                      } else if (weightController.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Weight should not be empty")),
-                        );
-                      } else if (workoutLocation.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Please choose a place for workout")),
-                        );
-                      } else if (selectedGoals.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Please choose your goal")),
-                        );
-                      } else {
-                        if (isLoading == false) _loadPlan();
-                      }
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                  Material(
+                    elevation: 8,
+                    borderRadius: BorderRadius.circular(12),
+                    color: isDark ? Colors.grey[800]! : Colors.white!,
+                    child: Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.all(12),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (ageController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Age should not be empty")),
+                            );
+                          } else if (heightController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Height should not be empty")),
+                            );
+                          } else if (weightController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Weight should not be empty")),
+                            );
+                          } else if (workoutLocation.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Please choose a place for workout")),
+                            );
+                          } else if (selectedGoals.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Please choose your goal")),
+                            );
+                          } else {
+                            if (isLoading == false) _loadPlan();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          side: BorderSide(color: borderColor, width: 1.8),
+                          minimumSize: Size(screenWidth * 0.80, 50),
+                        ),
+                        child: Text(buttonText, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 18)),
                       ),
-                      side: BorderSide(color: borderColor, width: 1.8),
-                      // minimumSize: Size(double.infinity, 50),
                     ),
-                    child: Text(buttonText, style: TextStyle(color: borderColor, fontWeight: FontWeight.w500)),
                   ),
                   SizedBox(height: 16),
                   showPlan
@@ -531,6 +556,7 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                               return const Text("No workout plan available.");
                             }
                             return Column(
+                              spacing: 12,
                               children: [
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -549,27 +575,33 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                                     ),
                                   ],
                                 ),
-                                SingleChildScrollView(
-                                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      "* Kindly go through all exercise before adding.",
-                                      style: TextStyle(fontWeight: FontWeight.w300),
-                                    ),
-                                    // planScreen(
-                                    //   workoutPlan: plan!,
-                                    // ),
-                                    WorkoutPlanScreen(
-                                      plan: plan!,
-                                    ),
-                                    const SizedBox(height: 12),
-                                    Text(
-                                      DISCLAIMER,
-                                      style: TextStyle(fontWeight: FontWeight.w300),
-                                    ),
-                                    const SizedBox(height: 62),
-                                  ]),
+                                Material(
+                                  elevation: 8,
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: isDark ? Colors.grey[800]! : Colors.white!,
+                                  child: SingleChildScrollView(
+                                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                      // const SizedBox(height: 12),
+                                      // Text(
+                                      //   "* Kindly go through all exercise before adding.",
+                                      //   style: TextStyle(fontWeight: FontWeight.w300),
+                                      // ),
+                                      // planScreen(
+                                      //   workoutPlan: plan!,
+                                      // ),
+                                      WorkoutPlanScreen(
+                                        plan: plan!,
+                                      ),
+                                    ]),
+                                  ),
                                 ),
+                                ExpandableText(
+                                  text: DISCLAIMER,
+                                  style: TextStyle(fontWeight: FontWeight.w400),
+                                  maxLines: 5,
+                                ),
+
+                                const SizedBox(height: 120),
                               ],
                             );
                           },
@@ -594,14 +626,17 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
                           right: 16,
                           child: ElevatedButton(
                             onPressed: () async {
-                              print("1");
-                              await HiveService.saveWorkoutPlan2('myPlan', plan);
-                              final id = await SharedPrefHelper.getUserID();
+                              // await HiveService.saveWorkoutPlan2('myPlan', plan);
+                              // final id = await SharedPrefHelper.getUserID();
                               // await setGoal([1, 2], plan, id!);
-                              print("2");
 
-                              await setWeekGoal([1, 2], plan, id!);
-                              ref.invalidate(todayTaskProvider); // Rebuild with updated data
+                              // await setWeekGoal([1, 2], plan, id!);
+                              // ref.invalidate(todayTaskProvider); // Rebuild with updated data
+                              final updatedPlan = plan.copyWith(startDate: DateTime.now());
+                              print('updatedPlan.startDate.toString()');
+                              print(updatedPlan.startDate.toString());
+                              print(updatedPlan.startDate.toString());
+                             await ref.read(workoutPlanProvider.notifier).savePlan(updatedPlan);
 
                               Navigator.pop(context);
                             },
@@ -680,7 +715,7 @@ backgroundColor: isDark ? CupertinoColors.black:Colors.white,
             Text(
               label,
               style: TextStyle(
-                  // color: isSelected ? Colors.white : Colors.black,
+                  color: selected ? Colors.white : Colors.black,
                   ),
             ),
           ],

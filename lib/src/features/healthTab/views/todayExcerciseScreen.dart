@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:healthvaults/src/features/healthTab/controller/todayExcerciseController.dart';
-import 'package:healthvaults/src/features/healthTab/views/demoExercise/exerciseDetailScreen.dart';
 import 'package:healthvaults/src/features/healthTab/views/widgets/exerciseCard.dart';
 import 'package:healthvaults/src/features/healthTab/views/widgets/progressCard.dart';
 import 'package:healthvaults/src/modals/WeeklyWorkoutPlan.dart';
@@ -13,7 +9,10 @@ import 'package:healthvaults/src/utils/router.dart';
 import 'package:intl/intl.dart';
 
 import '../../../common/views/planScreen.dart';
+import '../../../common/views/widgets/logoWithTextNAme.dart';
 import '../../../res/appImages.dart';
+import '../../../res/const.dart';
+import 'demoExercise/exerciseDetailScreen.dart';
 
 class TodaysTaskScreen extends ConsumerWidget {
   final WorkoutPlan2 workoutPlan;
@@ -23,192 +22,300 @@ class TodaysTaskScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final todaysTasksAsync = ref.watch(todayTaskProvider);
+    // Otherwise, show today’s progress + list
+    final total = workoutPlan.todayTotalExercises;
+    final done = workoutPlan.todayCompletedExercises;
+    final todayKey = DateFormat('EEEE').format(DateTime.now());
+    final todayWorkout = workoutPlan.todayWorkout;
+
+    // final todaysTasksAsync = ref.watch(todayTaskProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final today = DateFormat('EEEE').format(DateTime.now()); // Gets 'Monday', 'Tuesday', etc.
+    final today = DateFormat('EEEE').format(DateTime.now());
 
+    // String? todayKey;
+    // WorkoutDay? todayWorkout;
+
+    // for (var entry in workoutPlan.workouts.entries) {
+    //   if (entry.key.toLowerCase() == today.toLowerCase()) {
+    //     todayKey = entry.key;
+    //     todayWorkout = entry.value;
+    //     break;
+    //   }
+    // }
+
+
+    // If week one is completed:
+    if (workoutPlan.isWeekOneCompleted) {
+      return Center(
+        child: Text(
+          "Week One Completed 🎉",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      );
+    }
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: todaysTasksAsync.when(
-              data: (tasks) {
-                final completedTasks = tasks.where((t) => t.isCompleted).toList();
-
-                if (tasks.isEmpty) {
-                  return Center(child: Text('No tasks for today.'));
-                }
-                return ProgressCard(
-                  totalTask: tasks.length,
-                  completed: completedTasks.length,
-                );
-              },
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-          //
-
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: InkWell(
-              onTap: () {
-                context.pushNamed(routeNames.Mygoalscreen);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-                decoration: BoxDecoration(
-                  color: isDark ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
-                      spreadRadius: 1,
-                      blurRadius: 5,
-                      offset: Offset(0, 0), // Shadow on all sides
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Image.asset(
-                      appImages.pin,
-                      height: 26,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 12,
+          children: [
+            (todayWorkout == null || todayWorkout.routine.isEmpty)
+                ? Column(
+                    children: [
+                      NoTAskProgressCard(),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Text(
-                          workoutPlan.planName,
-                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                          'No exercises for today, you can take a walk or do light stretching for active recover!',
                           style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
+                            fontSize: 22,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                : Column(
+                    spacing: 12,
+                    children: [
+                      ProgressCard(
+                        totalTask: total,
+                        completed: done,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          context.pushNamed(routeNames.Mygoalscreen);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 18),
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.black : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                                offset: Offset(0, 0), // Shadow on all sides
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset(
+                                appImages.pin,
+                                height: 26,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    workoutPlan.planName,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 24,
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: 24,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          // WeeklyRow(
-          //   day: getTodayDayName(),
-          //   image: Constants.getIconPath(workoutPlan.weeklySchedule[getTodayDayName()]!),
-          //   text: workoutPlan.weeklySchedule[getTodayDayName()]!,
-          //   iconSize: 30,
-          //   textSize: 18,
-          //   isBold: false,
-          // ),
 
-          const SizedBox(height: 12),
+                      // WeeklyRow(
+                      //   day: getTodayDayName(),
+                      //   image: Constants.getIconPath(workoutPlan.weeklySchedule[getTodayDayName()]!),
+                      //   text: workoutPlan.weeklySchedule[getTodayDayName()]!,
+                      //   iconSize: 30,
+                      //   textSize: 18,
+                      //   isBold: false,
+                      // ),
+                      Text(todayWorkout?.theme ?? " ", style: Theme.of(context).textTheme.headlineSmall?.copyWith()),
 
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: todaysTasksAsync.when(
-              data: (tasks) {
-                if (tasks.isEmpty) {
-                  return Center(child: Text('No tasks for today.'));
-                }
-                return Column(
-                  children: [
-                    MasonryGridView.count(
-                      physics: const NeverScrollableScrollPhysics(),
-                      // Prevent inner scroll
-                      shrinkWrap: true,
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 5,
-                      crossAxisSpacing: 10,
-                      itemCount: tasks.length,
-                      itemBuilder: (context, index) {
-                        final ex = tasks[index];
-                        // log(ex.toJson().toString());
+                      ListView.builder(
+                          physics: const NeverScrollableScrollPhysics(),
+                          // Prevent inner scroll
+                          shrinkWrap: true,
+                          itemCount: todayWorkout.routine.length,
+                          itemBuilder: (context, index) {
+                            final ex = todayWorkout.routine[index];
+                            // log(ex.toJson().toString());
 
-                        return ExerciseCard2(exercise: ex, onStart: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DemoScreen(
-                                exercises: tasks,
-                                currentIndex: index,
+                            return Padding(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              child: ExerciseCard4(
+                                exercise: ex,
+                                onStart: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => DemoScreen(
+                                        exercises: todayWorkout.routine,
+                                        currentIndex: index,
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
-                            ),
-                          );
+                            );
+                          }),
+                      tipCards(
+                        todayWorkout: todayWorkout,
+                      ),
+                      AskYourselfCard(
+                        reflectionQuestions: workoutPlan.reflectionQuestions,
+                      ),
 
-                        },);
-                      },
-                    ),
-                    // ...exercises.map((exercise) => WorkoutSection(exercise: exercise)).toList(),
-                  ],
-                );
-              },
-              loading: () => Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
-          ),
+                      ExpandableText(
+                        text: DISCLAIMER,
+                        style: TextStyle(fontWeight: FontWeight.w400),
+                        maxLines: 5,
+                      ),
+                      const SizedBox(height: 12),
 
-          const SizedBox(height: 12),
-          tipCards(
-            plan: workoutPlan,
-          ),
-          const SizedBox(height: 12),
+                      logoWithTextName(),
+                      const SizedBox(height: 120),
+                    ],
+                  ),
 
-          AskYourselfCard(
-            reflectionQuestions: workoutPlan.reflectionQuestions,
-          )
-        ],
+            // todaysTasksAsync.when(
+            //   data: (tasks) {
+            //     if (tasks.isEmpty) {}
+            //     return Column(
+            //       spacing: 16,
+            //       children: [
+            //         ListView.builder(
+            //             physics: const NeverScrollableScrollPhysics(),
+            //             // Prevent inner scroll
+            //             shrinkWrap: true,
+            //             itemCount: tasks.length,
+            //             itemBuilder: (context, index) {
+            //               final ex = tasks[index];
+            //               // log(ex.toJson().toString());
+            //
+            //               return Padding(
+            //                 padding: EdgeInsets.symmetric(vertical: 12.0),
+            //                 child: ExerciseCard3(
+            //                   exercise: ex,
+            //                   onStart: () {
+            //                     Navigator.push(
+            //                       context,
+            //                       MaterialPageRoute(
+            //                         builder: (context) => DemoScreen(
+            //                           exercises: tasks,
+            //                           currentIndex: index,
+            //                         ),
+            //                       ),
+            //                     );
+            //                   },
+            //                 ),
+            //               );
+            //             }),
+            //         // MasonryGridView.count(
+            //         //   physics: const NeverScrollableScrollPhysics(),
+            //         //   // Prevent inner scroll
+            //         //   shrinkWrap: true,
+            //         //   crossAxisCount: 2,
+            //         //   mainAxisSpacing: 5,
+            //         //   crossAxisSpacing: 10,
+            //         //   itemCount: tasks.length,
+            //         //   itemBuilder: (context, index) {
+            //         //     final ex = tasks[index];
+            //         //     // log(ex.toJson().toString());
+            //         //
+            //         //     return ExerciseCard2(
+            //         //       exercise: ex,
+            //         //       onStart: () {
+            //         //         Navigator.push(
+            //         //           context,
+            //         //           MaterialPageRoute(
+            //         //             builder: (context) => DemoScreen(
+            //         //               exercises: tasks,
+            //         //               currentIndex: index,
+            //         //             ),
+            //         //           ),
+            //         //         );
+            //         //       },
+            //         //     );
+            //         //   },
+            //         // ),
+            //         // ...exercises.map((exercise) => WorkoutSection(exercise: exercise)).toList(),
+            //         Builder(builder: (context) {
+            //           if (todayWorkout != null) {
+            //             return tipCards(
+            //               todayWorkout: todayWorkout,
+            //             );
+            //           } else {
+            //             return SizedBox.shrink();
+            //           }
+            //         }),
+            //
+            //         AskYourselfCard(
+            //           reflectionQuestions: workoutPlan.reflectionQuestions,
+            //         ),
+            //
+            //         ExpandableText(
+            //           text: DISCLAIMER,
+            //           style: TextStyle(fontWeight: FontWeight.w400),
+            //           maxLines: 5,
+            //         ),
+            //         const SizedBox(height: 12),
+            //
+            //         logoWithTextName(),
+            //         const SizedBox(height: 120),
+            //       ],
+            //     );
+            //   },
+            //   loading: () => Center(child: CircularProgressIndicator()),
+            //   error: (err, stack) => Center(child: Text('Error: $err')),
+            // ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class tipCards extends StatelessWidget {
-  const tipCards({super.key, required this.plan});
+  const tipCards({super.key, required this.todayWorkout});
 
-  final WorkoutPlan2 plan;
+  final WorkoutDay todayWorkout;
 
   @override
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-    final today = DateFormat('EEEE').format(DateTime.now());
-    String? todayKey;
-    WorkoutDay? todayWorkout;
 
-    for (var entry in plan.workouts.entries) {
-      if (entry.key.toLowerCase() == today.toLowerCase()) {
-        todayKey = entry.key;
-        todayWorkout = entry.value;
-        break;
-      }
-    }
-     if (todayWorkout != null) {
-       return Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          spacing: 14,
-          children: [
-            card(screenWidth, context, "Alternative", todayWorkout.alternative),
-            card(screenWidth, context, "Common Mistakes", todayWorkout.commonMistake),
-            card(screenWidth, context, "Coach Tips", todayWorkout.coachTip),
-          ],
-        ),
-      );
-     }
-     else{
-       return SizedBox.shrink();
-     }
+    // final today = DateFormat('EEEE').format(DateTime.now());
+    // String? todayKey;
+    // WorkoutDay? todayWorkout;
+    //
+    // for (var entry in plan.workouts.entries) {
+    //   if (entry.key.toLowerCase() == today.toLowerCase()) {
+    //     todayKey = entry.key;
+    //     todayWorkout = entry.value;
+    //     break;
+    //   }
+    // }
+
+    return Column(
+      spacing: 14,
+      children: [
+        card(screenWidth, context, "Alternative", todayWorkout.alternative, appImages.alternateExercise),
+        card(screenWidth, context, "Common Mistakes", todayWorkout.commonMistake, appImages.commonMistake),
+        card(screenWidth, context, "Coach Tips", todayWorkout.coachTip, appImages.coachTip),
+      ],
+    );
   }
 
-  Material card(double screenWidth, BuildContext context, String title, String subt) {
+  Material card(double screenWidth, BuildContext context, String title, String subt, String img) {
     return Material(
         elevation: 10,
         borderRadius: BorderRadius.circular(12),
@@ -219,15 +326,16 @@ class tipCards extends StatelessWidget {
 
             children: [
               Container(
+                alignment: Alignment.center,
                 width: screenWidth * 0.3,
                 decoration: BoxDecoration(
                   color: Colors.cyan[100],
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(12), bottomLeft: Radius.circular(12)),
                 ),
-                child: Icon(
-                  Icons.fitness_center,
-                  size: 32,
-                ),
+                child: Center(
+                    child: SvgPicture.asset(
+                  img,
+                )),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -247,115 +355,3 @@ class tipCards extends StatelessWidget {
         ));
   }
 }
-// class WorkoutTodayScreen extends ConsumerWidget {
-//   final WorkoutPlan workoutPlan;
-//
-//   const WorkoutTodayScreen({super.key, required this.workoutPlan});
-//
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     return SingleChildScrollView(
-//       child: Column(
-//         children: [
-//           ProgressCard(),
-//           const SizedBox(height: 12),
-//
-//           InkWell(
-//             onTap: () {
-//               context.pushNamed(routeNames.Mygoalscreen);
-//             },
-//             child: Container(
-//               child: Row(
-//                 children: [
-//                   Image.asset(
-//                     appImages.pin,
-//                     height: 30,
-//                   ),
-//                   Expanded(
-//                     child: Padding(
-//                       padding: const EdgeInsets.only(left: 8.0),
-//                       child: Text(
-//                         workoutPlan.planName,
-//                         maxLines: 2,
-//                         style: TextStyle(
-//                           fontSize: 26,
-//                           fontWeight: FontWeight.w600,
-//                         ),
-//                       ),
-//                     ),
-//                   ),
-//                   Icon(
-//                     Icons.arrow_forward_ios_rounded,
-//                     size: 28,
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ),
-//           WeeklyRow(
-//             day: getTodayDayName(),
-//             image: Constants.getIconPath(workoutPlan.weeklySchedule[getTodayDayName()]!),
-//             text: workoutPlan.weeklySchedule[getTodayDayName()]!,
-//             iconSize: 30,
-//             textSize: 18,
-//             isBold: false,
-//           ),
-//
-//           const SizedBox(height: 12),
-//           excercise_ListView(),
-//           // ...exercises.map((exercise) => WorkoutSection(exercise: exercise)).toList(),
-//           const SizedBox(height: 20),
-//         ],
-//       ),
-//     );
-//   }
-//   //
-//   // String _calculateTotalDuration(List<Map<String, String>> exercises) {
-//   //   int totalMinutes = 0;
-//   //
-//   //   for (var ex in exercises) {
-//   //     final durationStr = ex['duration'];
-//   //     if (durationStr != null) {
-//   //       final match = RegExp(r'(\d+)\s*min').firstMatch(durationStr);
-//   //       if (match != null) {
-//   //         totalMinutes += int.tryParse(match.group(1) ?? '0') ?? 0;
-//   //       }
-//   //     }
-//   //   }
-//   //   return '$totalMinutes min';
-//   // }
-// }
-//
-// class excercise_ListView extends ConsumerWidget {
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final asyncExercises = ref.watch(todaysWorkoutProvider);
-//     debugPrint('🔄 Widget rebuilt: ${context.widget.runtimeType}');
-//
-//     return asyncExercises.when(
-//       data: (exercises) => exercises.isEmpty
-//           ? const Center(child: Text('No workout today'))
-//           : Column(
-//               children: [
-//                 MasonryGridView.count(
-//                   physics: const NeverScrollableScrollPhysics(),
-//                   // Prevent inner scroll
-//                   shrinkWrap: true,
-//                   crossAxisCount: 2,
-//                   mainAxisSpacing: 5,
-//                   crossAxisSpacing: 10,
-//                   itemCount: exercises.length,
-//                   itemBuilder: (context, index) {
-//                     final ex = exercises[index];;
-//
-//                     return ExerciseCard(exercise: ex);
-//                   },
-//                 ),
-//                 // ...exercises.map((exercise) => WorkoutSection(exercise: exercise)).toList(),
-//               ],
-//             ), // your exercise widgets
-//       loading: () => const Center(child: CircularProgressIndicator()),
-//       error: (err, stack) => Center(child: Text('Error: $err')),
-//     );
-//   }
-// }

@@ -42,6 +42,8 @@ class difficulty_Buttton extends StatelessWidget {
               title,
               style: TextStyle(color: Colors.white),
             ),
+            const SizedBox(width: 6),
+
           ],
         ),
       ),

@@ -106,6 +106,10 @@ class TaskEntity extends HiveObject {
 
   @HiveField(12)
   bool isCompleted;
+  @HiveField(13)
+  int completedIN;
+  @HiveField(14)
+  final String instruction;
 
   TaskEntity({
     required this.id,
@@ -121,6 +125,8 @@ class TaskEntity extends HiveObject {
     required this.repeatOn,
     this.isActive = false,
     this.isCompleted = false,
+    this.completedIN = 0,
+   required this.instruction ,
   });
 
 
@@ -138,6 +144,7 @@ class TaskEntity extends HiveObject {
     repeatOn: json['repeatOn'],
     isActive: json['isActive'],
     isCompleted: json['isCompleted'],
+    instruction: json['instruction']?? "",
   );
 
   Map<String, dynamic> toJson() => {

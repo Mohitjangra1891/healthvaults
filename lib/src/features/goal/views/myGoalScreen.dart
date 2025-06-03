@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:healthvaults/src/common/views/planScreen.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../../modals/WeeklyWorkoutPlan.dart';
 import '../../../modals/workoutPlan.dart';
+import '../../healthTab/controller/planController.dart';
 
-class Mygoalscreen extends StatelessWidget {
+class Mygoalscreen extends ConsumerWidget {
   const Mygoalscreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context ,WidgetRef ref) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final plan = ref.watch(workoutPlanProvider);
+
     return Scaffold(
 
       appBar: AppBar(title: Text("My Goal"),automaticallyImplyLeading: false,centerTitle: true,),
-      body: ValueListenableBuilder(
-          valueListenable: Hive.box<WorkoutPlan2>('workoutPlan2').listenable(keys: ['myPlan']),
-          builder: (context, Box<WorkoutPlan2> box, _) {
-            final savedPlan = box.get('myPlan');
 
-            return SingleChildScrollView(
-              child: savedPlan != null
-                  ? WorkoutPlanScreen(plan: savedPlan!)
+      body: SingleChildScrollView(
+              child: plan != null
+                  ? WorkoutPlanScreen(plan: plan!)
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,8 +33,7 @@ class Mygoalscreen extends StatelessWidget {
                         ),
                       ],
                     ),
-            );
-          }),
+            )
     );
   }
 }

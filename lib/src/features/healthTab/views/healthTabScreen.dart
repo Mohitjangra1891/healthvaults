@@ -5,22 +5,24 @@ import 'package:healthvaults/src/features/healthTab/views/todayExcerciseScreen.d
 import 'package:healthvaults/src/features/healthTab/views/widgets/noPlanScreen.dart';
 import 'package:healthvaults/src/utils/router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../../common/controller/userController.dart';
 import '../../../common/views/widgets/imagwWidget.dart';
 import '../../../modals/WeeklyWorkoutPlan.dart';
-import '../../../modals/workoutPlan.dart';
 import '../../../res/appColors.dart';
 import '../../../res/appImages.dart';
+import '../controller/planController.dart';
 
-class healthTabScreen extends StatefulWidget {
+
+class healthTabScreen extends ConsumerStatefulWidget {
   const healthTabScreen({super.key});
 
   @override
-  State<healthTabScreen> createState() => _healthTabScreenState();
+  ConsumerState<healthTabScreen> createState() => _healthTabScreenState();
 }
 
-class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAliveClientMixin {
+class _healthTabScreenState extends ConsumerState<healthTabScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true; // 🛡️ This keeps your tab alive
 
@@ -31,6 +33,7 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
 
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final plan = ref.watch(workoutPlanProvider);
 
     return SafeArea(
       child: Scaffold(
@@ -96,22 +99,8 @@ class _healthTabScreenState extends State<healthTabScreen> with AutomaticKeepAli
             ),
           ),
         ),
-        body: ValueListenableBuilder(
-            valueListenable: Hive.box<WorkoutPlan2>('workoutPlan2').listenable(keys: ['myPlan']),
-            builder: (context, Box<WorkoutPlan2> box, _) {
-              final savedPlan = box.get('myPlan');
+        body: plan == null ? noPlanScreen() : TodaysTaskScreen(workoutPlan: plan),
 
-              return savedPlan != null
-                  ? TodaysTaskScreen(
-                      workoutPlan: savedPlan,
-                    )
-                  // ?WorkoutTodayScreen(
-                  //         workoutPlan: savedPlan,
-                  //       )
-                  : noPlanScreen();
-            }),
-
-        // body : WorkoutTodayScreen(),
         drawer: buildDrawer(context),
       ),
     );

@@ -1,3 +1,5 @@
+import 'package:healthvaults/src/res/appImages.dart';
+
 final String gemini_Api_key = "AIzaSyD9qInR8qPrJf77MSovq2op_e4XeNzzYnY";
 class GoalKeys {
   static const loseWeight = "Lose Weight";
@@ -12,6 +14,39 @@ final String DISCLAIMER = "Disclaimer:- This app provides AI-generated exercise 
     "suggested. Exercise carefully and listen to your body";
 
 class Constants {
+
+ static String getTaskIcon(String type) {
+    switch (type) {
+      case 'EXERCISE':
+        return 'assets/images/bosu_ball.png';
+      case 'WARM-UP':
+        return 'assets/images/warm_up.png';
+      case 'COOL-DOWN':
+        return 'assets/images/cool_down.png';
+      default:
+        return 'assets/images/bosu_ball.png';
+    }
+  }
+  static String getWorkoutIcon(String day) {
+    switch (day) {
+      case 'Monday':
+        return appImages.exe1;
+      case 'Tuesday':
+        return appImages.exe2;
+      case 'Wednesday':
+        return appImages.exe3;
+      case 'Thursday':
+        return appImages.exe4;
+      case 'Friday':
+        return appImages.exe5;
+      case 'Saturday':
+        return appImages.exe6;
+      default:
+        return appImages.exe7;
+    }
+  }
+
+
   static String getIconPath(String icon) {
     switch (icon) {
       case "Strength Training":

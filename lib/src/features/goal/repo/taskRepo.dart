@@ -39,61 +39,61 @@ class TaskService {
   }
 }
 
-Future<void> setGoal(List<int> goals, WorkoutPlan workoutPlan, String userId) async {
-  int goalValue = 0;
-  for (var g in goals) {
-    goalValue += g * g;
-  }
-
-  await TaskService.clearTasks(); // clear old tasks
-
-  final weekSchedule = workoutPlan.weeklySchedule;
-  final months = [
-    workoutPlan.workouts.month1,
-    workoutPlan.workouts.month2,
-    workoutPlan.workouts.month3,
-  ];
-
-  for (int i = 0; i < months.length; i++) {
-    final month = months[i];
-    for (var entry in weekSchedule.entries) {
-      final dayName = entry.key;
-      final workoutType = entry.value;
-      final tasks = month[workoutType];
-
-      if (tasks == null) continue;
-
-      for (var task in tasks) {
-        final keys = task.keys.toList();
-        final key = keys.isNotEmpty ? keys.first : 'exercise';
-        final title = key.replaceAll('_', ' ').toUpperCase();
-
-        final value = task[key]?.replaceAll(RegExp(r'\s*\(.*?\)'), '');
-
-        // final values = task.values.toList();
-
-        final newTask = TaskEntity(
-          id: UniqueKey().toString(),
-          userId: userId,
-          goal: goalValue,
-          period: 28,
-          title: title,
-          value: value!,
-          description: task['reps'] ?? task['duration'] ?? "",
-          time: "09:00",
-          startDate: DateTime.now().add(Duration(days: i * 28)),
-          endDate: DateTime.now().add(Duration(days: (i + 1) * 28)),
-          repeatOn: getWeekInt(dayName),
-          isActive: false,
-          isCompleted: false,
-        );
-        log(newTask.value+newTask.description);
-        // log(newTask.value + newTask.description);
-        await TaskService.addTask(newTask);
-      }
-    }
-  }
-}
+// Future<void> setGoal(List<int> goals, WorkoutPlan workoutPlan, String userId) async {
+//   int goalValue = 0;
+//   for (var g in goals) {
+//     goalValue += g * g;
+//   }
+//
+//   await TaskService.clearTasks(); // clear old tasks
+//
+//   final weekSchedule = workoutPlan.weeklySchedule;
+//   final months = [
+//     workoutPlan.workouts.month1,
+//     workoutPlan.workouts.month2,
+//     workoutPlan.workouts.month3,
+//   ];
+//
+//   for (int i = 0; i < months.length; i++) {
+//     final month = months[i];
+//     for (var entry in weekSchedule.entries) {
+//       final dayName = entry.key;
+//       final workoutType = entry.value;
+//       final tasks = month[workoutType];
+//
+//       if (tasks == null) continue;
+//
+//       for (var task in tasks) {
+//         final keys = task.keys.toList();
+//         final key = keys.isNotEmpty ? keys.first : 'exercise';
+//         final title = key.replaceAll('_', ' ').toUpperCase();
+//
+//         final value = task[key]?.replaceAll(RegExp(r'\s*\(.*?\)'), '');
+//
+//         // final values = task.values.toList();
+//
+//         final newTask = TaskEntity(
+//           id: UniqueKey().toString(),
+//           userId: userId,
+//           goal: goalValue,
+//           period: 28,
+//           title: title,
+//           value: value!,
+//           description: task['reps'] ?? task['duration'] ?? "",
+//           time: "09:00",
+//           startDate: DateTime.now().add(Duration(days: i * 28)),
+//           endDate: DateTime.now().add(Duration(days: (i + 1) * 28)),
+//           repeatOn: getWeekInt(dayName),
+//           isActive: false,
+//           isCompleted: false, instruction: '',
+//         );
+//         log(newTask.value+newTask.description);
+//         // log(newTask.value + newTask.description);
+//         await TaskService.addTask(newTask);
+//       }
+//     }
+//   }
+// }
 Future<void> setWeekGoal(List<int> goals, WorkoutPlan2 workoutPlan, String userId) async {
   int goalValue = 0;
   for (var g in goals) {
@@ -109,17 +109,14 @@ Future<void> setWeekGoal(List<int> goals, WorkoutPlan2 workoutPlan, String userI
     final repeatOn = _weekdayStringToInt(dayKey);
 
     for (var step in workoutDay.routine) {
-      final Map<String, String?> fields = {
-        if (step.warmUp != null) 'Warm-up': step.warmUp,
-        if (step.exercise != null) 'Exercise': step.exercise,
-        if (step.coolDown != null) 'Cool-down': step.coolDown,
-      };
 
-      final type = fields.keys.first;
+
+      final type = step.type;
       final title = type.toUpperCase();
-      final value = fields.values.first ?? '';
+      final value = step.name ?? '';
 
       final description = step.reps ?? step.duration ?? '';
+      final instruction = step.instruction;
       final now = DateTime.now();
 
       final task = TaskEntity(
@@ -135,7 +132,8 @@ Future<void> setWeekGoal(List<int> goals, WorkoutPlan2 workoutPlan, String userI
         endDate: now.add(Duration(days: 7)),
         repeatOn: repeatOn,
         isActive: false,
-        isCompleted: false,
+        isCompleted: false, instruction: instruction,
+        // completedIN: 0
       );
       log(task.value+task.description);
 

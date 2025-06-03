@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 
 import '../../../modals/WeeklyWorkoutPlan.dart';
-import '../../../modals/workoutPlan.dart';
 import '../../../res/const.dart';
 
 class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan2?>> {
@@ -30,18 +29,37 @@ class PlanNotifier extends StateNotifier<AsyncValue<WorkoutPlan2?>> {
       // final result = await fetchWorkoutPlan(prompt: prompt);
       final response = await _chat.sendMessage(Content.text(prompt));
       final rawText = response.text ?? 'No response.';
-      // print("rawtext---$rawText");
       final cleanedJson = rawText.replaceAll(RegExp(r'```json'), '').replaceAll(RegExp(r'```'), '').trim();
       final jsonData = json.decode(cleanedJson);
-      log(jsonData.toString());
-      final plan2 = WorkoutPlan2.fromJson(jsonData);
+      await jsonData.addAll({'start_date': DateTime.now().toIso8601String()});
 
-      log(plan2.workouts.toString());
+      final plan2 = WorkoutPlan2.fromJson(jsonData);
+      plan2.workouts.forEach((day, workoutDay) {
+        print('--- $day ---');
+        print('Theme: ${workoutDay.theme}');
+        for (int i = 0; i < workoutDay.routine.length; i++) {
+          final item = workoutDay.routine[i];
+
+          print('    type: ${item.type}');
+          print('    Name: ${item.name}');
+          print('    Instruction: ${item.instruction}');
+          print('    Reps: ${item.reps}');
+          print('    Duration: ${item.duration}');
+          print('    usernote: ${item.userNote}');
+          print('    idcompleted: ${item.isCompleted}');
+          print('    completed in: ${item.completedIN}');
+        }
+        print('Coach Tip: ${workoutDay.coachTip}');
+        print('Common Mistake: ${workoutDay.commonMistake}');
+        print('Alternative: ${workoutDay.alternative}');
+        print('----------------------\n');
+      });
+      // log(plan2.workouts.toString());
       // final plan = WorkoutPlan.fromJson(jsonData);
 
       state = AsyncValue.data(plan2);
     } catch (e, st) {
-      log("Error in fetchWorkoutPlan: $e");
+      log("Error in Creating WorkoutPlan: $e");
 
       state = AsyncValue.error(e, st);
     }

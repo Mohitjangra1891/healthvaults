@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +34,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         // Navigator.push(context, MaterialPageRoute(builder: (context) => OtpVerificationScreen(phoneNumber: _phoneController.text)));
       } else if (next is AuthError) {
+
         showToast(next.message);
 
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(next.message)));

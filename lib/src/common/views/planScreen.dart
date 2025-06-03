@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:healthvaults/src/common/views/widgets/logoWithTextNAme.dart';
 import 'package:healthvaults/src/features/goal/views/widgets/monthlyWorkOut.dart';
 import 'package:healthvaults/src/features/goal/views/widgets/rowIconText.dart';
 import 'package:healthvaults/src/res/appImages.dart';
@@ -102,29 +104,43 @@ class WorkoutPlanScreen extends StatelessWidget {
     }
 
     return Column(
+      spacing: 12,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         // Header: Week Title
         Container(
-          color: Colors.green[100],
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
-          child: Text(
-            plan.planName,
-            style: const TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
+          decoration: BoxDecoration(
+            color: Colors.green[100],
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 16),
+          child: Column(
+            children: [
+              Text(
+                "WeeK 1",
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                plan.planName,
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 16),
 
         // Workouts Section
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: const Text('Workouts', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         ),
-        const SizedBox(height: 12),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -136,8 +152,10 @@ class WorkoutPlanScreen extends StatelessWidget {
                 .toList(),
           ),
         ),
-        const SizedBox(height: 24),
-
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: const Text('Word From Coach', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        ),
         // Coach Remarks + Achievement
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -149,12 +167,22 @@ class WorkoutPlanScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                IntrinsicHeight (
+                IntrinsicHeight(
                   child: Row(
                     children: [
-                      Expanded(child: _CoachCard(title: 'Remark 1', text: plan.remark1)),
+                      Expanded(
+                          child: _CoachCard(
+                        title: 'Remark 1',
+                        text: plan.remark1,
+                        img: appImages.remark_1,
+                      )),
                       const SizedBox(width: 12),
-                      Expanded(child: _CoachCard(title: 'Remark 2', text: plan.remark2)),
+                      Expanded(
+                          child: _CoachCard(
+                        title: 'Remark 2',
+                        text: plan.remark2,
+                        img: appImages.remark_2,
+                      )),
                     ],
                   ),
                 ),
@@ -164,11 +192,15 @@ class WorkoutPlanScreen extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 24),
 
         // Reflection Questions
-        AskYourselfCard(reflectionQuestions: plan.reflectionQuestions),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: AskYourselfCard(reflectionQuestions: plan.reflectionQuestions),
+        ),
         const SizedBox(height: 24),
+        logoWithTextName(),
+        const SizedBox(height: 60),
       ],
     );
   }
@@ -187,63 +219,59 @@ class AskYourselfCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final screenWidth = MediaQuery.of(context).size.width;
 
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Material(
-        elevation: 10,
-        borderRadius: BorderRadius.circular(12 ),
-        child: Container(
-          height: 160,
-            // color: Colors.cyan[100],
+    return Material(
+      elevation: 10,
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        height: 220,
+        // color: Colors.cyan[100],
 
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          // padding: EdgeInsets.symmetric(horizontal: 12,vertical: 18),
-          decoration: BoxDecoration(
-            color: Colors.cyan[100],
-            borderRadius: BorderRadius.circular(12),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
-            //     spreadRadius: 1,
-            //     blurRadius: 5,
-            //     offset: Offset(0, 0), // Shadow on all sides
-            //   ),
-            // ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  'Ask to yourself',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        // padding: EdgeInsets.symmetric(horizontal: 12,vertical: 18),
+        decoration: BoxDecoration(
+          color: Colors.cyan[100],
+          borderRadius: BorderRadius.circular(12),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: isDark ? Colors.white.withOpacity(0.2) : Colors.black.withOpacity(0.2),
+          //     spreadRadius: 1,
+          //     blurRadius: 5,
+          //     offset: Offset(0, 0), // Shadow on all sides
+          //   ),
+          // ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Ask to yourself',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 8),
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: reflectionQuestions.length,
-                  itemBuilder: (context, i) => Container(
-
-                    width: screenWidth*0.40,
-                    margin: const EdgeInsets.only(right: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Text(
-                      reflectionQuestions[i],
-                      style: const TextStyle(fontSize: 16),
-                    ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: reflectionQuestions.length,
+                itemBuilder: (context, i) => Container(
+                  width: screenWidth * 0.40,
+                  margin: const EdgeInsets.only(right: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(12),
+                  child: Text(
+                    reflectionQuestions[i],
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -252,9 +280,10 @@ class AskYourselfCard extends StatelessWidget {
 
 class _CoachCard extends StatelessWidget {
   final String title;
+  final String img;
   final String text;
 
-  const _CoachCard({required this.title, required this.text});
+  const _CoachCard({required this.title, required this.text, required this.img});
 
   @override
   Widget build(BuildContext context) {
@@ -267,13 +296,19 @@ class _CoachCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height: 80,
+            padding: EdgeInsets.symmetric(vertical: 16),
             decoration: BoxDecoration(
               color: Colors.green[100],
               borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
             ),
             alignment: Alignment.center,
-            child: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Column(
+              spacing: 12,
+              children: [
+                Image.asset(img),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(8),
@@ -368,14 +403,14 @@ class _ExerciseCardState extends State<ExerciseCard> {
                   ),
                 ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.dayKey.substring(0,3), style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(widget.dayKey.substring(0, 3), style: const TextStyle(fontWeight: FontWeight.bold ,fontSize: 24)),
                     const SizedBox(height: 4),
-                    Text(widget.day.theme, style: const TextStyle(fontSize: 12)),
+                    Text(widget.day.theme, style: const TextStyle(fontSize: 18)),
                     const SizedBox(height: 8),
-                    const Icon(Icons.fitness_center, size: 32),
+                    SvgPicture.asset(Constants.getWorkoutIcon(widget.dayKey) ,height: 50,),
                   ],
                 ),
               ),
@@ -391,7 +426,7 @@ class _ExerciseCardState extends State<ExerciseCard> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(
-                                    r.reps != null || r.duration != null ? Icons.check : Icons.circle_outlined,
+                                    Icons.check ,
                                     size: 16,
                                   ),
                                   const SizedBox(width: 8),
@@ -413,20 +448,21 @@ class _ExerciseCardState extends State<ExerciseCard> {
   Widget _buildCollapsed() {
     return Material(
       elevation: 8,
-        borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12),
       child: Container(
         decoration: BoxDecoration(color: Colors.cyan[200], borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(
           children: [
-            Text(widget.dayKey.substring(0,3), style: const TextStyle(fontWeight: FontWeight.bold ,fontSize: 20)),
+            Text(widget.dayKey.substring(0, 3), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
             const SizedBox(width: 16),
             Expanded(child: Text("${widget.day.theme} ${widget.dayKey}")),
             Container(
-              width: 32,
-              height: 32,
+              width: 42,
+              height:42,
+              padding: EdgeInsets.all(6),
               decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.black)),
-              child: const Icon(Icons.fitness_center, size: 20),
+              child: SvgPicture.asset(Constants.getWorkoutIcon(widget.dayKey) ,height: 20,),
             ),
           ],
         ),

@@ -31,9 +31,13 @@ Future<void> main() async {
     Hive.registerAdapter(WorkoutMonthAdapter());
     Hive.registerAdapter(TaskEntityAdapter());
 
+
     // Open a box for storing WorkoutPlan objects
-    await Hive.openBox<WorkoutPlan>('workoutPlans');
-    await Hive.openBox<WorkoutPlan2>('workoutPlan2');
+    // await Hive.openBox<WorkoutPlan>('workoutPlans');
+    // await Hive.openBox<WorkoutPlan2>('workoutPlan2');
+    await Hive.openBox<WorkoutPlan2>('workoutPlanBox');
+    // await Hive.openBox<WorkoutPlan2>('plan');
+
     runApp(ProviderScope(child: const MyApp()));
   } catch (e) {
     print('Error initializing Hive: $e');

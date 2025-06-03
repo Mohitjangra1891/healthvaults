@@ -38,6 +38,9 @@ class _SplashscreenState extends ConsumerState<Splashscreen> {
         ref.read(userNameProvider.notifier).state = userName ?? "Guest";
 
         // await ref.read(profilesProvider.notifier).fetchProfilesFromApi();
+
+
+        //turn it on later ///
         // await ref.read(recordListProvider.notifier).fetchInitial();
 
         context.goNamed(routeNames.home);
@@ -45,7 +48,8 @@ class _SplashscreenState extends ConsumerState<Splashscreen> {
         //   context.goNamed(routeNames.addDetails);
         // }
       } else {
-        context.goNamed(routeNames.login);
+        // context.goNamed(routeNames.login);
+        context.goNamed(routeNames.home);
       }
     }
   }

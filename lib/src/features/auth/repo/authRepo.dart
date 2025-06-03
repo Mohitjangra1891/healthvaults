@@ -15,6 +15,7 @@ class ApiClient {
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(body),
     );
+    print(response.body);
     return jsonDecode(response.body);
   }
 
